@@ -4,20 +4,67 @@ import axios from "axios";
 
 import EmployeeSidebar from "../components/dashboard/EmployeeSidebar";
 import EmployeeNavbar from "../components/dashboard/EmployeeNavbar";
-
 import ManagerSidebar from "../components/dashboard/ManagerSidebar";
 import ManagerNavbar from "../components/dashboard/ManagerNavbar";
 
 import "../styles/EmployeeInventory.css";
 
-function EmployeeInventory() {
+function InventoryIcon({ type, size = 24 }) {
+  const icons = {
+    package: (
+      <>
+        <path d="m12 3 9 5-9 5-9-5 9-5Z" />
+        <path d="m3 8 9 5 9-5" />
+        <path d="M3 8v9l9 5 9-5V8" />
+        <path d="M12 13v9" />
+      </>
+    ),
+    chart: (
+      <>
+        <path d="M3 3v18h18" />
+        <rect x="6" y="12" width="3.5" height="6" rx="1" />
+        <rect x="11" y="8" width="3.5" height="10" rx="1" />
+        <rect x="16" y="4" width="3.5" height="14" rx="1" />
+      </>
+    ),
+    warning: (
+      <>
+        <path d="M12 3 22 20H2L12 3Z" />
+        <path d="M12 9v5" />
+        <path d="M12 17h.01" />
+      </>
+    ),
+    out: (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M8 8l8 8M16 8l-8 8" />
+      </>
+    ),
+  };
 
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      {icons[type]}
+    </svg>
+  );
+}
+
+function EmployeeInventory() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
 
- 
-  // GET LOGGED USER
+  // Logged-in user
   const storedUser = localStorage.getItem("user");
   let user = null;
 
@@ -29,50 +76,28 @@ function EmployeeInventory() {
 
   const isManager = user?.role === "manager";
 
-  console.log("User:", user);
-  console.log("Role:", user?.role);
-  console.log("Is Manager:", isManager);
-  
-  // =========================================
-  // GET PRODUCTS
-  // =========================================
-
+  // Get products
   const fetchInventory = async () => {
-
     try {
-
       const response = await axios.get(
         "http://localhost:5000/products"
       );
 
-      setProducts(response.data);
-
-    } catch (error) {
-
-      console.error(
-        "Error fetching inventory:",
-        error
+      setProducts(
+        Array.isArray(response.data) ? response.data : []
       );
-
+    } catch (error) {
+      console.error("Error fetching inventory:", error);
     } finally {
-
       setLoading(false);
-
     }
   };
-
-  // =========================================
-  // LOAD DATA
-  // =========================================
 
   useEffect(() => {
     fetchInventory();
   }, []);
 
-  // =========================================
-  // STATISTICS
-  // =========================================
-
+  // Statistics
   const totalProducts = products.length;
 
   const totalStock = products.reduce(
@@ -81,433 +106,203 @@ function EmployeeInventory() {
     0
   );
 
-  const lowStock = products.filter(
-    (product) => {
-      const quantity = Number(product.quantity || 0);
-
-      return quantity > 0 && quantity <= 5;
-    }
-  );
+  const lowStock = products.filter((product) => {
+    const quantity = Number(product.quantity || 0);
+    return quantity > 0 && quantity <= 5;
+  });
 
   const outOfStock = products.filter(
-    (product) =>
-      Number(product.quantity || 0) === 0
+    (product) => Number(product.quantity || 0) === 0
   );
 
-  // =========================================
-  // FILTER PRODUCTS
-  // =========================================
+  // Filter products
+  const filteredProducts = products.filter((product) => {
+    const quantity = Number(product.quantity || 0);
 
-  const filteredProducts = products.filter(
-    (product) => {
-
-      const quantity =
-        Number(product.quantity || 0);
-
-      if (filter === "low") {
-
-        return quantity > 0 && quantity <= 5;
-
-      }
-
-      if (filter === "out") {
-
-        return quantity === 0;
-
-      }
-
-      if (filter === "totalStock") {
-
-        return quantity > 0;
-
-      }
-
-      return true;
+    if (filter === "low") {
+      return quantity > 0 && quantity <= 5;
     }
-  );
 
-  // =========================================
-  // RENDER
-  // =========================================
+    if (filter === "out") {
+      return quantity === 0;
+    }
+
+    if (filter === "totalStock") {
+      return quantity > 0;
+    }
+
+    return true;
+  });
+
+  const emptyMessages = {
+    all: "No products available.",
+    low: "No low stock products.",
+    out: "No out of stock products.",
+    totalStock: "No products currently in stock.",
+  };
 
   return (
-
     <div className="dashboard-layout">
-
-      {/* ================================
-          SIDEBAR
-      ================================= */}
-
-      {isManager ? (
-        <ManagerSidebar />
-      ) : (
-        <EmployeeSidebar />
-      )}
+      {isManager ? <ManagerSidebar /> : <EmployeeSidebar />}
 
       <main className="dashboard-content">
+        {isManager ? <ManagerNavbar /> : <EmployeeNavbar />}
 
-        {/* ================================
-            NAVBAR
-        ================================= */}
-
-        {isManager ? (
-          <ManagerNavbar />
-        ) : (
-          <EmployeeNavbar />
-        )}
-
-        {/* ================================
-            HEADER
-        ================================= */}
-
+        {/* Header */}
         <div className="inventory-header">
-
           <div>
-
-            <h1>
-              Inventory
-            </h1>
-
-            <p>
-              Monitor your stock and inventory levels.
-            </p>
-
+            <h1>Inventory</h1>
+            <p>Monitor your stock and inventory levels.</p>
           </div>
-
         </div>
 
-        {/* ================================
-            LOADING
-        ================================= */}
-
+        {/* Loading */}
         {loading ? (
-
           <div className="inventory-loading">
             Loading inventory...
           </div>
-
         ) : (
-
           <>
-
-            {/* ================================
-                STAT CARDS
-            ================================= */}
-
+            {/* Statistics */}
             <div className="inventory-stats">
+              <button
+                type="button"
+                className={`inventory-stat-card ${
+                  filter === "all" ? "active" : ""
+                }`}
+                onClick={() => setFilter("all")}
+              >
+                <span className="inventory-stat-icon">
+                  <InventoryIcon type="package" />
+                </span>
 
-              {/* TOTAL PRODUCTS */}
+                <div>
+                  <p>Total Products</p>
+                  <h2>{totalProducts}</h2>
+                </div>
+              </button>
 
               <button
                 type="button"
                 className={`inventory-stat-card ${
-                  filter === "all"
-                    ? "active"
-                    : ""
+                  filter === "totalStock" ? "active" : ""
                 }`}
-                onClick={() =>
-                  setFilter("all")
-                }
+                onClick={() => setFilter("totalStock")}
               >
-
                 <span className="inventory-stat-icon">
-                  📦
+                  <InventoryIcon type="chart" />
                 </span>
 
                 <div>
-
-                  <p>
-                    Total Products
-                  </p>
-
-                  <h2>
-                    {totalProducts}
-                  </h2>
-
+                  <p>Total Stock</p>
+                  <h2>{totalStock}</h2>
                 </div>
-
               </button>
-
-
-              {/* TOTAL STOCK */}
 
               <button
                 type="button"
                 className={`inventory-stat-card ${
-                  filter === "totalStock"
-                    ? "active"
-                    : ""
+                  filter === "low" ? "active" : ""
                 }`}
-                onClick={() =>
-                  setFilter("totalStock")
-                }
+                onClick={() => setFilter("low")}
               >
-
                 <span className="inventory-stat-icon">
-                  📊
+                  <InventoryIcon type="warning" />
                 </span>
 
                 <div>
-
-                  <p>
-                    Total Stock
-                  </p>
-
-                  <h2>
-                    {totalStock}
-                  </h2>
-
+                  <p>Low Stock</p>
+                  <h2>{lowStock.length}</h2>
                 </div>
-
               </button>
-
-
-              {/* LOW STOCK */}
 
               <button
                 type="button"
                 className={`inventory-stat-card ${
-                  filter === "low"
-                    ? "active"
-                    : ""
+                  filter === "out" ? "active" : ""
                 }`}
-                onClick={() =>
-                  setFilter("low")
-                }
+                onClick={() => setFilter("out")}
               >
-
                 <span className="inventory-stat-icon">
-                  ⚠️
+                  <InventoryIcon type="out" />
                 </span>
 
                 <div>
-
-                  <p>
-                    Low Stock
-                  </p>
-
-                  <h2>
-                    {lowStock.length}
-                  </h2>
-
+                  <p>Out of Stock</p>
+                  <h2>{outOfStock.length}</h2>
                 </div>
-
               </button>
-
-
-              {/* OUT OF STOCK */}
-
-              <button
-                type="button"
-                className={`inventory-stat-card ${
-                  filter === "out"
-                    ? "active"
-                    : ""
-                }`}
-                onClick={() =>
-                  setFilter("out")
-                }
-              >
-
-                <span className="inventory-stat-icon">
-                  🔴
-                </span>
-
-                <div>
-
-                  <p>
-                    Out of Stock
-                  </p>
-
-                  <h2>
-                    {outOfStock.length}
-                  </h2>
-
-                </div>
-
-              </button>
-
             </div>
 
-
-            {/* ================================
-                INVENTORY TABLE
-            ================================= */}
-
+            {/* Inventory table */}
             <div className="inventory-card">
-
               <div className="inventory-card-header">
-
                 <div>
-
-                  <h2>
-                    Stock Overview
-                  </h2>
-
-                  <p>
-                    Current stock levels of all products
-                  </p>
-
+                  <h2>Stock Overview</h2>
+                  <p>Current stock levels of all products</p>
                 </div>
-
               </div>
 
-
               {filteredProducts.length === 0 ? (
-
                 <div className="inventory-empty">
-
-                  {filter === "low" &&
-                    "No low stock products."}
-
-                  {filter === "out" &&
-                    "No out of stock products."}
-
-                  {filter === "totalStock" &&
-                    "No products currently in stock."}
-
-                  {filter === "all" &&
-                    "No products available."}
-
+                  {emptyMessages[filter]}
                 </div>
-
               ) : (
-
                 <div className="inventory-table-container">
-
                   <table className="inventory-table">
-
                     <thead>
-
                       <tr>
-
-                        <th>
-                          Product
-                        </th>
-
-                        <th>
-                          Category
-                        </th>
-
-                        <th>
-                          Brand
-                        </th>
-
-                        <th>
-                          Stock
-                        </th>
-
-                        <th>
-                          Status
-                        </th>
-
+                        <th>Product</th>
+                        <th>Category</th>
+                        <th>Brand</th>
+                        <th>Stock</th>
+                        <th>Status</th>
                       </tr>
-
                     </thead>
 
                     <tbody>
+                      {filteredProducts.map((product) => {
+                        const quantity = Number(
+                          product.quantity || 0
+                        );
 
-                      {filteredProducts.map(
-                        (product) => {
+                        let status = "Available";
+                        let statusClass = "inventory-status-ok";
 
-                          const quantity =
-                            Number(
-                              product.quantity || 0
-                            );
-
-                          let status =
-                            "Available";
-
-                          let statusClass =
-                            "inventory-status-ok";
-
-
-                          if (quantity === 0) {
-
-                            status =
-                              "Out of Stock";
-
-                            statusClass =
-                              "inventory-status-out";
-
-                          } else if (
-                            quantity <= 5
-                          ) {
-
-                            status =
-                              "Low Stock";
-
-                            statusClass =
-                              "inventory-status-low";
-
-                          }
-
-
-                          return (
-
-                            <tr
-                              key={product._id}
-                            >
-
-                              <td>
-                                {product.name}
-                              </td>
-
-                              <td>
-                                {product.category}
-                              </td>
-
-                              <td>
-                                {product.brand}
-                              </td>
-
-                              <td>
-
-                                <strong>
-                                  {quantity}
-                                </strong>
-
-                              </td>
-
-                              <td>
-
-                                <span
-                                  className={
-                                    statusClass
-                                  }
-                                >
-                                  {status}
-                                </span>
-
-                              </td>
-
-                            </tr>
-
-                          );
-
+                        if (quantity === 0) {
+                          status = "Out of Stock";
+                          statusClass = "inventory-status-out";
+                        } else if (quantity <= 5) {
+                          status = "Low Stock";
+                          statusClass = "inventory-status-low";
                         }
-                      )}
 
+                        return (
+                          <tr key={product._id}>
+                            <td>{product.name}</td>
+                            <td>{product.category}</td>
+                            <td>{product.brand}</td>
+                            <td>
+                              <strong>{quantity}</strong>
+                            </td>
+                            <td>
+                              <span className={statusClass}>
+                                {status}
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
-
                   </table>
-
                 </div>
-
               )}
-
             </div>
-
           </>
-
         )}
-
       </main>
-
     </div>
-
   );
 }
 
 export default EmployeeInventory;
-

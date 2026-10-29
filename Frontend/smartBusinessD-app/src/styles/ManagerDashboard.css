@@ -215,3 +215,287 @@
     grid-template-columns: 1fr;
   }
 }
+/* SVG ICONS */
+
+.manager-stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 14px;
+}
+
+.manager-stat-icon svg {
+  width: 23px;
+  height: 23px;
+  stroke-width: 1.9;
+}
+
+.revenue-icon {
+  color: #16845b;
+  background: #e6f7ee;
+}
+
+.sales-icon {
+  color: #6254d9;
+  background: #efedff;
+}
+
+.products-icon {
+  color: #2876d2;
+  background: #e8f2ff;
+}
+
+.warning-icon {
+  color: #d97706;
+  background: #fff3dc;
+}
+
+.manager-stat-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.manager-stat-label {
+  color: #777b8a;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.manager-stat-footer {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 14px;
+  color: #8b8f9d;
+  font-size: 12px;
+}
+
+.manager-stat-footer svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.manager-panel-header-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  color: #6254d9;
+  background: #efedff;
+}
+
+.manager-panel-header-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.warning-panel-icon {
+  color: #d97706;
+  background: #fff3dc;
+}
+
+.stock-alert-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.stock-alert-icon svg {
+  width: 19px;
+  height: 19px;
+}
+
+.stock-alert-item.out .stock-alert-icon {
+  color: #dc3545;
+}
+
+.stock-alert-item.low .stock-alert-icon {
+  color: #d97706;
+}
+
+.manager-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 28px 16px;
+  color: #8b8f9d;
+  font-size: 13px;
+}
+
+.manager-empty > svg {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+}
+
+.manager-empty .success-icon {
+  color: #16845b;
+}
+
+.manager-refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 11px 16px;
+  border: 1px solid #e7e7ef;
+  border-radius: 10px;
+  background: #fff;
+  color: #343447;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.manager-refresh-btn:hover {
+  background: #f7f6ff;
+  border-color: #d8d3ff;
+}
+
+.manager-refresh-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.manager-refresh-btn svg {
+  width: 17px;
+  height: 17px;
+}
+
+.spinning {
+  animation: manager-spin 1s linear infinite;
+}
+
+@keyframes manager-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.manager-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 30px;
+  color: #777b8a;
+  font-size: 14px;
+}
+
+.manager-loading svg {
+  width: 20px;
+  height: 20px;
+}
+
+.manager-error-message {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  border: 1px solid #f4cccc;
+  border-radius: 10px;
+  background: #fff5f5;
+  color: #b42318;
+  font-size: 13px;
+}
+
+.manager-error-message > svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.manager-error-message button {
+  margin-left: auto;
+  border: 0;
+  background: transparent;
+  color: #b42318;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.manager-table-product {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.manager-table-product-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 9px;
+  background: #f1f0ff;
+  color: #6254d9;
+}
+
+.manager-table-product-icon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.manager-table-amount {
+  font-weight: 600;
+}
+
+.manager-sale-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 9px;
+  border-radius: 20px;
+  background: #eaf8f0;
+  color: #16845b;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.manager-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #16845b;
+}
+
+@media (max-width: 768px) {
+  .manager-dashboard-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .manager-refresh-btn {
+    width: 100%;
+  }
+
+  .manager-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .manager-table-wrapper {
+    overflow-x: auto;
+  }
+
+  .manager-sales-table {
+    min-width: 650px;
+  }
+}

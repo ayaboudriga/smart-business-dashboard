@@ -547,3 +547,32 @@
   }
 
 }
+
+.sales-stat-icon,
+.sales-empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sales-stat-icon svg {
+  width: 25px;
+  height: 25px;
+}
+
+.sales-empty-icon svg {
+  width: 34px;
+  height: 34px;
+}
+
+.close-sale-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-sale-btn svg {
+  width: 20px;
+  height: 20px;
+}

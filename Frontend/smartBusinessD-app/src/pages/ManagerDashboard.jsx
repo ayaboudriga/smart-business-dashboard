@@ -1,5 +1,18 @@
+
 import { useEffect, useState } from "react";
 import axios from "axios";
+
+import {
+  FiDollarSign,
+  FiShoppingCart,
+  FiPackage,
+  FiAlertTriangle,
+  FiXCircle,
+  FiCheckCircle,
+  FiTrendingUp,
+  FiCalendar,
+  FiUser,
+} from "react-icons/fi";
 
 import ManagerSidebar from "../components/dashboard/ManagerSidebar";
 import ManagerNavbar from "../components/dashboard/ManagerNavbar";
@@ -17,18 +30,26 @@ function ManagerDashboard() {
 
   const fetchData = async () => {
     try {
+      setLoading(true);
+
       const [productsResponse, salesResponse] = await Promise.all([
         axios.get("http://localhost:5000/products"),
         axios.get("http://localhost:5000/sales"),
       ]);
 
-      setProducts(productsResponse.data);
-      setSales(salesResponse.data);
-    } catch (error) {
-      console.error(
-        "Error loading manager dashboard:",
-        error
+      setProducts(
+        Array.isArray(productsResponse.data)
+          ? productsResponse.data
+          : []
       );
+
+      setSales(
+        Array.isArray(salesResponse.data)
+          ? salesResponse.data
+          : []
+      );
+    } catch (error) {
+      console.error("Error loading manager dashboard:", error);
     } finally {
       setLoading(false);
     }
@@ -43,27 +64,27 @@ function ManagerDashboard() {
   // ================================
 
   const totalProducts = products.length;
-
   const totalSales = sales.length;
 
   const totalRevenue = sales.reduce(
-    (total, sale) =>
-      total + Number(sale.totalPrice || 0),
+    (total, sale) => total + Number(sale.totalPrice || 0),
     0
   );
 
-  const lowStockProducts = products.filter(
-    (product) => {
-      const quantity = Number(product.quantity);
-
-      return quantity > 0 && quantity <= 5;
-    }
-  );
+  const lowStockProducts = products.filter((product) => {
+    const quantity = Number(product.quantity);
+    return quantity > 0 && quantity <= 5;
+  });
 
   const outOfStockProducts = products.filter(
-    (product) =>
-      Number(product.quantity) === 0
+    (product) => Number(product.quantity) === 0
   );
+
+  const formatCurrency = (amount) =>
+    `${Number(amount).toLocaleString("fr-TN", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })} TND`;
 
   // ================================
   // Top Selling Products
@@ -73,9 +94,7 @@ function ManagerDashboard() {
 
   sales.forEach((sale) => {
     const productId = sale.product?._id;
-
-    const productName =
-      sale.product?.name || "Unknown";
+    const productName = sale.product?.name || "Unknown";
 
     if (!productId) return;
 
@@ -86,15 +105,11 @@ function ManagerDashboard() {
       };
     }
 
-    productSales[productId].quantity +=
-      Number(sale.quantity || 0);
+    productSales[productId].quantity += Number(sale.quantity || 0);
   });
 
   const topProducts = Object.values(productSales)
-    .sort(
-      (a, b) =>
-        b.quantity - a.quantity
-    )
+    .sort((a, b) => b.quantity - a.quantity)
     .slice(0, 5);
 
   // ================================
@@ -103,404 +118,261 @@ function ManagerDashboard() {
 
   return (
     <div className="dashboard-layout">
-
       <ManagerSidebar />
 
       <main className="dashboard-content">
-
         <ManagerNavbar />
 
-        {/* HEADER */}
-
         <div className="manager-header">
-
           <div>
-            <h1>
-              Manager Dashboard
-            </h1>
-
-            <p>
-              Overview of your business performance.
-            </p>
+            <h1>Manager Dashboard</h1>
+            <p>Overview of your business performance.</p>
           </div>
 
+          <button
+            type="button"
+            className="manager-refresh-btn"
+            onClick={fetchData}
+            disabled={loading}
+          >
+            <FiTrendingUp />
+            <span>{loading ? "Loading..." : "Refresh data"}</span>
+          </button>
         </div>
 
-
-        {/* LOADING */}
-
         {loading ? (
-
           <div className="manager-loading">
             Loading dashboard...
           </div>
-
         ) : (
-
           <>
-
-            {/* ================================
-                KPI CARDS
-            ================================= */}
+            {/* KPI CARDS */}
 
             <div className="manager-stats">
-
               <div className="manager-stat-card">
-
-                <div className="manager-stat-icon">
-                  💰
+                <div className="manager-stat-icon revenue-icon">
+                  <FiDollarSign />
                 </div>
 
                 <div>
                   <p>Total Revenue</p>
-
-                  <h2>
-                    {totalRevenue.toLocaleString()} TND
-                  </h2>
+                  <h2>{formatCurrency(totalRevenue)}</h2>
                 </div>
-
               </div>
 
-
               <div className="manager-stat-card">
-
-                <div className="manager-stat-icon">
-                  🛒
+                <div className="manager-stat-icon sales-icon">
+                  <FiShoppingCart />
                 </div>
 
                 <div>
                   <p>Total Sales</p>
-
-                  <h2>
-                    {totalSales}
-                  </h2>
+                  <h2>{totalSales}</h2>
                 </div>
-
               </div>
 
-
               <div className="manager-stat-card">
-
-                <div className="manager-stat-icon">
-                  📦
+                <div className="manager-stat-icon products-icon">
+                  <FiPackage />
                 </div>
 
                 <div>
                   <p>Total Products</p>
-
-                  <h2>
-                    {totalProducts}
-                  </h2>
+                  <h2>{totalProducts}</h2>
                 </div>
-
               </div>
 
-
               <div className="manager-stat-card">
-
-                <div className="manager-stat-icon">
-                  ⚠️
+                <div className="manager-stat-icon warning-icon">
+                  <FiAlertTriangle />
                 </div>
 
                 <div>
                   <p>Low Stock</p>
-
-                  <h2>
-                    {lowStockProducts.length}
-                  </h2>
+                  <h2>{lowStockProducts.length}</h2>
                 </div>
-
               </div>
-
             </div>
 
-
-            {/* ================================
-                BUSINESS OVERVIEW
-            ================================= */}
+            {/* BUSINESS OVERVIEW */}
 
             <div className="manager-grid">
-
-
               {/* TOP PRODUCTS */}
 
               <div className="manager-card">
-
                 <div className="manager-card-header">
-
                   <div>
-
-                    <h2>
-                      Top Selling Products
-                    </h2>
-
-                    <p>
-                      Best performing products
-                    </p>
-
+                    <h2>Top Selling Products</h2>
+                    <p>Best performing products</p>
                   </div>
 
+                  <FiTrendingUp className="manager-heading-icon" />
                 </div>
 
-
                 {topProducts.length === 0 ? (
-
                   <div className="manager-empty">
-                    No sales data available.
+                    <FiPackage />
+                    <span>No sales data available.</span>
                   </div>
-
                 ) : (
-
                   <div className="top-products-list">
-
-                    {topProducts.map(
-                      (product, index) => (
-
-                        <div
-                          className="top-product-item"
-                          key={index}
-                        >
-
-                          <div className="top-product-number">
-                            {index + 1}
-                          </div>
-
-                          <div className="top-product-info">
-
-                            <strong>
-                              {product.name}
-                            </strong>
-
-                            <span>
-                              {product.quantity} units sold
-                            </span>
-
-                          </div>
-
+                    {topProducts.map((product, index) => (
+                      <div
+                        className="top-product-item"
+                        key={product.name + index}
+                      >
+                        <div className="top-product-number">
+                          {index + 1}
                         </div>
 
-                      )
-                    )}
-
+                        <div className="top-product-info">
+                          <strong>{product.name}</strong>
+                          <span>{product.quantity} units sold</span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-
                 )}
-
               </div>
-
 
               {/* STOCK ALERTS */}
 
               <div className="manager-card">
-
                 <div className="manager-card-header">
-
                   <div>
-
-                    <h2>
-                      Stock Alerts
-                    </h2>
-
-                    <p>
-                      Products requiring attention
-                    </p>
-
+                    <h2>Stock Alerts</h2>
+                    <p>Products requiring attention</p>
                   </div>
 
+                  <FiAlertTriangle className="manager-heading-icon warning-heading-icon" />
                 </div>
-
 
                 {lowStockProducts.length === 0 &&
                 outOfStockProducts.length === 0 ? (
-
-                  <div className="manager-empty">
-                    ✅ Stock levels are healthy.
+                  <div className="manager-empty stock-healthy">
+                    <FiCheckCircle />
+                    <span>Stock levels are healthy.</span>
                   </div>
-
                 ) : (
-
                   <div className="stock-alert-list">
+                    {outOfStockProducts.slice(0, 3).map((product) => (
+                      <div
+                        className="stock-alert-item out"
+                        key={product._id}
+                      >
+                        <span className="stock-alert-icon">
+                          <FiXCircle />
+                        </span>
 
-                    {/* OUT OF STOCK */}
-
-                    {outOfStockProducts
-                      .slice(0, 3)
-                      .map((product) => (
-
-                        <div
-                          className="stock-alert-item out"
-                          key={product._id}
-                        >
-
-                          <span>
-                            🔴
-                          </span>
-
-                          <div>
-
-                            <strong>
-                              {product.name}
-                            </strong>
-
-                            <p>
-                              Out of stock
-                            </p>
-
-                          </div>
-
+                        <div>
+                          <strong>{product.name}</strong>
+                          <p>Out of stock</p>
                         </div>
+                      </div>
+                    ))}
 
-                      ))}
+                    {lowStockProducts.slice(0, 3).map((product) => (
+                      <div
+                        className="stock-alert-item low"
+                        key={product._id}
+                      >
+                        <span className="stock-alert-icon">
+                          <FiAlertTriangle />
+                        </span>
 
-
-                    {/* LOW STOCK */}
-
-                    {lowStockProducts
-                      .slice(0, 3)
-                      .map((product) => (
-
-                        <div
-                          className="stock-alert-item low"
-                          key={product._id}
-                        >
-
-                          <span>
-                            ⚠️
-                          </span>
-
-                          <div>
-
-                            <strong>
-                              {product.name}
-                            </strong>
-
-                            <p>
-                              Only {product.quantity} left
-                            </p>
-
-                          </div>
-
+                        <div>
+                          <strong>{product.name}</strong>
+                          <p>Only {product.quantity} left</p>
                         </div>
-
-                      ))}
-
+                      </div>
+                    ))}
                   </div>
-
                 )}
-
               </div>
-
             </div>
 
+            {/* RECENT SALES */}
 
-            {/* ================================
-                RECENT SALES
-            ================================= */}
-
-            <div className="manager-card">
-
+            <div className="manager-card manager-recent-sales">
               <div className="manager-card-header">
-
                 <div>
-
-                  <h2>
-                    Recent Sales
-                  </h2>
-
-                  <p>
-                    Latest business transactions
-                  </p>
-
+                  <h2>Recent Sales</h2>
+                  <p>Latest business transactions</p>
                 </div>
 
+                <FiShoppingCart className="manager-heading-icon" />
               </div>
-
 
               {sales.length === 0 ? (
-
                 <div className="manager-empty">
-                  No sales available.
+                  <FiShoppingCart />
+                  <span>No sales available.</span>
                 </div>
-
               ) : (
-
                 <div className="manager-table-container">
-
                   <table className="manager-table">
-
                     <thead>
-
                       <tr>
-
                         <th>Product</th>
-
                         <th>Customer</th>
-
                         <th>Quantity</th>
-
                         <th>Revenue</th>
-
                         <th>Date</th>
-
                       </tr>
-
                     </thead>
 
-
                     <tbody>
-
-                      {sales
+                      {[...sales]
+                        .sort(
+                          (a, b) =>
+                            new Date(b.createdAt || 0) -
+                            new Date(a.createdAt || 0)
+                        )
                         .slice(0, 5)
                         .map((sale) => (
-
-                          <tr
-                            key={sale._id}
-                          >
-
+                          <tr key={sale._id}>
                             <td>
-                              {sale.product?.name ||
-                                "Unknown"}
+                              <div className="manager-table-product">
+                                <FiPackage />
+                                <span>
+                                  {sale.product?.name || "Unknown"}
+                                </span>
+                              </div>
                             </td>
 
                             <td>
-                              {sale.customer ||
-                                "Walk-in Customer"}
+                              <span className="manager-customer">
+                                <FiUser />
+                                {sale.customer || "Walk-in Customer"}
+                              </span>
+                            </td>
+
+                            <td>{sale.quantity ?? 0}</td>
+
+                            <td className="manager-revenue-cell">
+                              {formatCurrency(sale.totalPrice || 0)}
                             </td>
 
                             <td>
-                              {sale.quantity}
+                              <span className="manager-date-cell">
+                                <FiCalendar />
+                                {sale.createdAt
+                                  ? new Date(
+                                      sale.createdAt
+                                    ).toLocaleDateString("fr-FR")
+                                  : "—"}
+                              </span>
                             </td>
-
-                            <td>
-                              {sale.totalPrice} TND
-                            </td>
-
-                            <td>
-                              {new Date(
-                                sale.createdAt
-                              ).toLocaleDateString()}
-                            </td>
-
                           </tr>
-
                         ))}
-
                     </tbody>
-
                   </table>
-
                 </div>
-
               )}
-
             </div>
-
           </>
-
         )}
-
       </main>
-
     </div>
   );
 }

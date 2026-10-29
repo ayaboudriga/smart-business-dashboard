@@ -531,3 +531,52 @@
     width: 100%;
   }
 }
+
+.admin-add-product-btn,
+.admin-close-form-btn,
+.admin-edit-product-btn,
+.admin-delete-product-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.admin-add-product-btn svg,
+.admin-close-form-btn svg,
+.admin-edit-product-btn svg,
+.admin-delete-product-btn svg {
+  display: block;
+  flex-shrink: 0;
+}
+
+.admin-products-search-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-products-search-wrapper > svg {
+  color: #000000;
+  flex-shrink: 0;
+}
+
+.admin-products-search-wrapper .admin-products-search {
+  min-width: 0;
+  width: 100%;
+}
+
+.admin-empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000000;
+}
+
+.admin-empty-icon svg {
+  display: block;
+}
+
+.admin-close-form-btn svg {
+  color: #000000;
+}

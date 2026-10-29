@@ -1,1279 +1,646 @@
-/* ============================================================
-   REPORTS — UNIQUE ANALYTICS EXPERIENCE
-   Compatible EXACTLY with Reports.jsx
-============================================================ */
 
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap");
-
-
-/* ============================================================
-   VARIABLES
-============================================================ */
+/* ==========================================
+   REPORTS PAGE — BUSINESS INTELLIGENCE
+========================================== */
 
 :root {
-  --report-bg: #f3f5f8;
-  --report-white: #ffffff;
-
-  --report-dark: #101828;
-  --report-muted: #667085;
-  --report-light: #98a2b3;
-
-  --report-line: #e4e7ec;
-
-  --report-green: #12b76a;
-  --report-green-dark: #079455;
-  --report-green-soft: #ecfdf3;
-
-  --report-blue: #3b82f6;
-  --report-blue-soft: #eff6ff;
-
-  --report-orange: #f79009;
-  --report-orange-soft: #fffaeb;
-
-  --report-red: #f04438;
-  --report-red-soft: #fef3f2;
-
-  --report-purple: #7f56d9;
-  --report-purple-soft: #f4f3ff;
-
-  --report-shadow:
-    0 4px 12px rgba(16, 24, 40, 0.04);
-
-  --report-shadow-hover:
-    0 18px 40px rgba(16, 24, 40, 0.09);
-
-  --report-radius: 18px;
-}
-
-
-/* ============================================================
-   BASE
-============================================================ */
-
-* {
-  box-sizing: border-box;
+  --reports-bg: #f5f6fa;
+  --reports-card: #ffffff;
+  --reports-text: #202938;
+  --reports-muted: #7b8495;
+  --reports-border: #e8ebf2;
+  --reports-primary: #6254d9;
+  --reports-radius: 16px;
+  --reports-shadow: 0 4px 20px rgba(31, 41, 55, 0.045);
 }
 
 .dashboard-layout {
+  display: flex;
   min-height: 100vh;
-
-  background:
-    radial-gradient(
-      circle at 85% 5%,
-      rgba(18, 183, 106, 0.06),
-      transparent 25%
-    ),
-    #f3f5f8;
-
-  font-family:
-    "DM Sans",
-    sans-serif;
-
-  color: var(--report-dark);
+  background: var(--reports-bg);
 }
 
 .dashboard-content {
   flex: 1;
-
   min-width: 0;
-
-  padding: 30px 38px 60px;
+  padding: 28px 32px;
+  background: var(--reports-bg);
+  color: var(--reports-text);
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
 }
 
-
-/* ============================================================
-   HEADER — UNIQUE
-============================================================ */
+/* HEADER */
 
 .reports-header {
-  position: relative;
-
   display: flex;
-
-  align-items: flex-end;
   justify-content: space-between;
-
-  margin-bottom: 30px;
-
-  padding: 26px 28px;
-
-  overflow: hidden;
-
-  border:
-    1px solid
-    rgba(228, 231, 236, 0.9);
-
-  border-radius: 22px;
-
-  background:
-    linear-gradient(
-      120deg,
-      #ffffff 0%,
-      #f9fbfa 55%,
-      #eefbf6 100%
-    );
-
-  box-shadow:
-    0 8px 30px rgba(16, 24, 40, 0.05);
-}
-
-
-/* decorative circle */
-
-.reports-header::before {
-  content: "";
-
-  position: absolute;
-
-  width: 180px;
-  height: 180px;
-
-  right: -55px;
-  top: -85px;
-
-  border-radius: 50%;
-
-  background:
-    rgba(18, 183, 106, 0.08);
-}
-
-
-/* second decoration */
-
-.reports-header::after {
-  content: "";
-
-  position: absolute;
-
-  width: 90px;
-  height: 90px;
-
-  right: 90px;
-  bottom: -55px;
-
-  border-radius: 50%;
-
-  background:
-    rgba(59, 130, 246, 0.06);
-}
-
-.reports-header > div {
-  position: relative;
-
-  z-index: 2;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 8px 0 28px;
 }
 
 .reports-header h1 {
   margin: 0 0 8px;
-
-  font-family:
-    "Space Grotesk",
-    sans-serif;
-
-  font-size: 30px;
-
-  font-weight: 700;
-
-  letter-spacing: -1px;
-
-  color: var(--report-dark);
+  color: var(--reports-text);
+  font-size: 29px;
+  font-weight: 750;
+  letter-spacing: -0.8px;
 }
 
 .reports-header p {
   margin: 0;
-
-  color: var(--report-muted);
-
+  color: var(--reports-muted);
   font-size: 14px;
+  line-height: 1.6;
 }
 
-
-/* ============================================================
-   LOADING
-============================================================ */
-
-.reports-loading {
-  min-height: 300px;
-
+.reports-header-actions {
   display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+}
 
+/* ACTION BUTTONS */
+
+.reports-action-btn {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-
-  border-radius: 22px;
-
-  background: #ffffff;
-
-  border:
-    1px solid
-    var(--report-line);
-
-  color: var(--report-muted);
-
-  font-size: 14px;
+  gap: 9px;
+  min-height: 43px;
+  padding: 0 16px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 650;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.reports-loading::before {
-  content: "";
-
-  width: 20px;
-  height: 20px;
-
-  margin-right: 12px;
-
-  border:
-    2px solid
-    #e4e7ec;
-
-  border-top-color:
-    var(--report-green);
-
-  border-radius: 50%;
-
-  animation:
-    reportSpin
-    0.7s
-    linear
-    infinite;
+.reports-action-btn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 
-@keyframes reportSpin {
-
-  to {
-    transform: rotate(360deg);
-  }
-
+.reports-action-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(31, 41, 55, 0.1);
 }
 
+.reports-action-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
 
-/* ============================================================
-   KPI AREA
-============================================================ */
+.excel-btn {
+  color: #167647;
+  background: #eaf7ef;
+  border-color: #ccebd8;
+}
+
+.excel-btn:hover:not(:disabled) {
+  background: #d9f1e2;
+}
+
+.pdf-btn {
+  color: #c3313b;
+  background: #fff0f0;
+  border-color: #f4d1d3;
+}
+
+.pdf-btn:hover:not(:disabled) {
+  background: #ffe2e3;
+}
+
+.refresh-btn {
+  color: #fff;
+  background: #252d3c;
+  border-color: #252d3c;
+}
+
+.refresh-btn:hover:not(:disabled) {
+  background: #141b28;
+}
+
+.reports-action-btn:focus-visible {
+  outline: 3px solid rgba(98, 84, 217, 0.25);
+  outline-offset: 3px;
+}
+
+/* KPI CARDS */
 
 .reports-stats {
-
   display: grid;
-
-  grid-template-columns:
-    1.35fr
-    1fr
-    1fr
-    1fr;
-
-  gap: 14px;
-
-  margin-bottom: 22px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 25px;
 }
 
-
-/* ============================================================
-   KPI CARD
-============================================================ */
-
 .report-stat-card {
-
   position: relative;
-
-  min-height: 130px;
-
   display: flex;
-
-  align-items: center;
-
-  gap: 16px;
-
-  padding: 22px;
-
+  align-items: flex-start;
+  gap: 15px;
+  min-width: 0;
+  padding: 23px 20px;
   overflow: hidden;
-
-  border-radius:
-    var(--report-radius);
-
-  border:
-    1px solid
-    var(--report-line);
-
-  background:
-    rgba(255, 255, 255, 0.92);
-
-  box-shadow:
-    var(--report-shadow);
-
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
+  background: var(--reports-card);
+  border: 1px solid var(--reports-border);
+  border-radius: var(--reports-radius);
+  box-shadow: var(--reports-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .report-stat-card:hover {
-
-  transform:
-    translateY(-4px);
-
-  box-shadow:
-    var(--report-shadow-hover);
+  transform: translateY(-3px);
+  box-shadow: 0 9px 25px rgba(31, 41, 55, 0.075);
 }
-
-
-/* decorative glow */
-
-.report-stat-card::after {
-
-  content: "";
-
-  position: absolute;
-
-  width: 100px;
-  height: 100px;
-
-  right: -40px;
-  bottom: -45px;
-
-  border-radius: 50%;
-
-  background:
-    rgba(18, 183, 106, 0.07);
-}
-
-
-/* ============================================================
-   FIRST KPI — REVENUE
-============================================================ */
-
-.report-stat-card:nth-child(1) {
-
-  color: white;
-
-  border: none;
-
-  background:
-    linear-gradient(
-      135deg,
-      #0f766e,
-      #12b76a
-    );
-
-  box-shadow:
-    0 12px 28px
-    rgba(18, 183, 106, 0.20);
-}
-
-.report-stat-card:nth-child(1) p {
-
-  color:
-    rgba(255,255,255,0.75);
-}
-
-.report-stat-card:nth-child(1) h2 {
-
-  color: white;
-
-  font-size: 25px;
-}
-
-.report-stat-card:nth-child(1)
-.report-stat-icon {
-
-  background:
-    rgba(255,255,255,0.16);
-
-  backdrop-filter:
-    blur(8px);
-}
-
-
-/* ============================================================
-   KPI ICON
-============================================================ */
 
 .report-stat-icon {
-
-  position: relative;
-
-  z-index: 2;
-
-  flex-shrink: 0;
-
-  width: 48px;
-  height: 48px;
-
   display: flex;
-
   align-items: center;
   justify-content: center;
-
-  border-radius: 14px;
-
-  font-size: 20px;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 13px;
+  color: var(--reports-primary);
+  background: #efedff;
 }
 
-.report-stat-card:nth-child(2)
-.report-stat-icon {
-
-  background:
-    var(--report-orange-soft);
+.report-stat-icon svg {
+  width: 23px;
+  height: 23px;
 }
 
-.report-stat-card:nth-child(3)
-.report-stat-icon {
-
-  background:
-    var(--report-blue-soft);
+.report-stat-card:nth-child(2) .report-stat-icon {
+  color: #d97706;
+  background: #fff4df;
 }
 
-.report-stat-card:nth-child(4)
-.report-stat-icon {
-
-  background:
-    var(--report-purple-soft);
+.report-stat-card:nth-child(3) .report-stat-icon {
+  color: #16845b;
+  background: #e5f7ed;
 }
 
-
-/* ============================================================
-   KPI TEXT
-============================================================ */
-
-.report-stat-card > div:last-child {
-
-  position: relative;
-
-  z-index: 2;
+.report-stat-card:nth-child(4) .report-stat-icon {
+  color: #2876d2;
+  background: #e8f2ff;
 }
 
-.report-stat-card p {
-
-  margin: 0 0 6px;
-
-  color:
-    var(--report-muted);
-
-  font-size: 11px;
-
-  font-weight: 700;
-
-  text-transform:
-    uppercase;
-
-  letter-spacing:
-    0.7px;
+.report-stat-card h3 {
+  margin: 2px 0 10px;
+  color: var(--reports-muted);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
 }
 
 .report-stat-card h2 {
-
   margin: 0;
-
-  font-family:
-    "Space Grotesk",
-    sans-serif;
-
-  color:
-    var(--report-dark);
-
-  font-size: 22px;
-
-  font-weight: 700;
-
-  letter-spacing:
-    -0.5px;
+  color: var(--reports-text);
+  font-size: clamp(20px, 2vw, 27px);
+  font-weight: 750;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
+.report-stat-card p {
+  margin: 8px 0 0;
+  color: var(--reports-muted);
+  font-size: 12px;
+}
 
-/* ============================================================
-   MAIN ANALYTICS GRID
-============================================================ */
+/* REPORT CONTENT GRID */
 
 .reports-grid {
-
   display: grid;
-
-  grid-template-columns:
-    1.45fr
-    1fr;
-
-  gap: 18px;
-
-  margin-bottom: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  margin-bottom: 23px;
 }
-
-
-/* ============================================================
-   REPORT CARD
-============================================================ */
 
 .reports-card {
-
-  position: relative;
-
-  overflow: hidden;
-
+  min-width: 0;
   padding: 24px;
-
-  border:
-    1px solid
-    var(--report-line);
-
-  border-radius:
-    var(--report-radius);
-
-  background:
-    var(--report-white);
-
-  box-shadow:
-    var(--report-shadow);
+  background: var(--reports-card);
+  border: 1px solid var(--reports-border);
+  border-radius: var(--reports-radius);
+  box-shadow: var(--reports-shadow);
 }
-
-
-/* ============================================================
-   CARD HEADER
-============================================================ */
 
 .reports-card-header {
-
   display: flex;
-
   align-items: center;
   justify-content: space-between;
-
-  margin-bottom: 20px;
-
-  padding-bottom: 15px;
-
-  border-bottom:
-    1px solid
-    var(--report-line);
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 23px;
 }
 
-.reports-card-header h2 {
-
-  margin: 0 0 4px;
-
-  font-family:
-    "Space Grotesk",
-    sans-serif;
-
-  font-size: 17px;
-
-  font-weight: 700;
-
-  color:
-    var(--report-dark);
+.reports-card-header h2,
+.reports-card-header h3 {
+  margin: 0;
+  color: var(--reports-text);
+  font-size: 16px;
+  font-weight: 720;
 }
 
 .reports-card-header p {
-
-  margin: 0;
-
+  margin: 6px 0 0;
+  color: var(--reports-muted);
   font-size: 12px;
-
-  color:
-    var(--report-light);
+  line-height: 1.5;
 }
 
-
-/* ============================================================
-   TOP PRODUCTS — RANKING STYLE
-============================================================ */
+/* TOP PRODUCTS */
 
 .top-products-list {
-
   display: flex;
-
   flex-direction: column;
-
-  gap: 7px;
+  gap: 5px;
 }
 
 .report-product-item {
-
-  position: relative;
-
   display: flex;
-
   align-items: center;
+  gap: 13px;
+  padding: 13px 9px;
+  border-bottom: 1px solid #f0f1f5;
+  transition: background 0.2s ease;
+}
 
-  gap: 14px;
-
-  padding: 13px 10px;
-
-  border-radius:
-    12px;
-
-  transition:
-    all 0.2s ease;
+.report-product-item:last-child {
+  border-bottom: none;
 }
 
 .report-product-item:hover {
-
-  background:
-    #f8fafc;
-
-  transform:
-    translateX(4px);
+  background: #f8f8fc;
+  border-radius: 10px;
 }
-
-.report-product-item:not(:last-child) {
-
-  border-bottom:
-    1px solid
-    #f0f2f5;
-}
-
-
-/* ============================================================
-   RANK
-============================================================ */
 
 .report-product-rank {
-
-  flex-shrink: 0;
-
-  width: 34px;
-  height: 34px;
-
   display: flex;
-
   align-items: center;
   justify-content: center;
-
-  border-radius:
-    10px;
-
-  background:
-    #f2f4f7;
-
-  color:
-    var(--report-muted);
-
-  font-family:
-    "Space Grotesk",
-    sans-serif;
-
-  font-size: 12px;
-
-  font-weight: 700;
+  width: 35px;
+  height: 35px;
+  flex-shrink: 0;
+  color: #6254d9;
+  background: #efedff;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 750;
 }
-
-
-/* first place */
-
-.report-product-item:nth-child(1)
-.report-product-rank {
-
-  background:
-    linear-gradient(
-      135deg,
-      #12b76a,
-      #079455
-    );
-
-  color: white;
-
-  box-shadow:
-    0 5px 12px
-    rgba(18,183,106,0.2);
-}
-
-
-/* second */
-
-.report-product-item:nth-child(2)
-.report-product-rank {
-
-  background:
-    #eef0f3;
-
-  color:
-    #667085;
-}
-
-
-/* third */
-
-.report-product-item:nth-child(3)
-.report-product-rank {
-
-  background:
-    #f6ece1;
-
-  color:
-    #c17a4a;
-}
-
-
-/* ============================================================
-   PRODUCT INFO
-============================================================ */
 
 .report-product-info {
-
   flex: 1;
-
   min-width: 0;
-
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 3px;
 }
 
-.report-product-info strong {
-
-  overflow: hidden;
-
-  white-space: nowrap;
-
-  text-overflow: ellipsis;
-
-  color:
-    var(--report-dark);
-
-  font-size: 13.5px;
-
-  font-weight: 600;
-}
-
-.report-product-info span {
-
-  color:
-    var(--report-light);
-
-  font-size: 11.5px;
-}
-
-
-/* revenue */
-
-.report-product-item > strong:last-child {
-
-  color:
-    var(--report-green-dark);
-
-  font-family:
-    "Space Grotesk",
-    sans-serif;
-
+.report-product-info h4 {
+  margin: 0 0 5px;
+  color: var(--reports-text);
   font-size: 13px;
-
-  font-weight: 700;
-
-  white-space: nowrap;
+  font-weight: 650;
+  overflow-wrap: anywhere;
 }
 
+.report-product-info p {
+  margin: 0;
+  color: var(--reports-muted);
+  font-size: 12px;
+}
 
-/* ============================================================
-   INVENTORY — STATUS PANEL
-============================================================ */
+/* INVENTORY STATUS */
 
 .inventory-report-list {
-
-  display: grid;
-
-  grid-template-columns:
-    1fr 1fr;
-
+  display: flex;
+  flex-direction: column;
   gap: 12px;
 }
 
 .inventory-report-item {
-
-  position: relative;
-
-  min-height: 82px;
-
   display: flex;
-
-  flex-direction: column;
-
-  align-items: flex-start;
-
-  justify-content: center;
-
-  padding:
-    14px 16px;
-
-  overflow: hidden;
-
-  border:
-    1px solid
-    var(--report-line);
-
-  border-radius:
-    13px;
-
-  background:
-    #f8fafc;
-
-  transition:
-    transform 0.2s ease;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px;
+  background: #f8fafc;
+  border: 1px solid #edf0f5;
+  border-left: 4px solid #e5a12b;
+  border-radius: 10px;
 }
 
-.inventory-report-item:hover {
+.inventory-report-item.low {
+  background: #fffaf0;
+  border-left-color: #e5a12b;
+}
 
-  transform:
-    translateY(-2px);
+.inventory-report-item.out {
+  background: #fff4f4;
+  border-left-color: #df4d55;
+}
+
+.inventory-report-item > * {
+  min-width: 0;
+}
+
+.inventory-report-item h4 {
+  margin: 0 0 5px;
+  color: var(--reports-text);
+  font-size: 13px;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+.inventory-report-item p {
+  margin: 0;
+  color: var(--reports-muted);
+  font-size: 12px;
 }
 
 .inventory-report-item span {
-
-  margin-bottom: 7px;
-
-  color:
-    var(--report-muted);
-
-  font-size: 11px;
-
-  font-weight: 600;
-}
-
-.inventory-report-item strong {
-
-  font-family:
-    "Space Grotesk",
-    sans-serif;
-
-  font-size: 22px;
-
+  flex-shrink: 0;
+  font-size: 12px;
   font-weight: 700;
-
-  color:
-    var(--report-dark);
 }
 
-
-/* available */
-
-.inventory-report-item:nth-child(1) {
-
-  background:
-    var(--report-green-soft);
-
-  border-color:
-    #d1fadf;
-}
-
-.inventory-report-item:nth-child(1)::after {
-
-  content: "";
-
-  position: absolute;
-
-  right: -20px;
-  bottom: -25px;
-
-  width: 70px;
-  height: 70px;
-
-  border-radius: 50%;
-
-  background:
-    rgba(18,183,106,0.08);
-}
-
-
-/* total stock */
-
-.inventory-report-item:nth-child(2) {
-
-  background:
-    var(--report-blue-soft);
-
-  border-color:
-    #dbeafe;
-}
-
-
-/* low */
-
-.inventory-report-item.low {
-
-  background:
-    var(--report-orange-soft);
-
-  border-color:
-    #fedf89;
-}
-
-.inventory-report-item.low span,
-.inventory-report-item.low strong {
-
-  color:
-    #b54708;
-}
-
-
-/* out */
-
-.inventory-report-item.out {
-
-  background:
-    var(--report-red-soft);
-
-  border-color:
-    #fecdca;
-}
-
-.inventory-report-item.out span,
-.inventory-report-item.out strong {
-
-  color:
-    #b42318;
-}
-
-
-/* ============================================================
-   RECENT SALES — DATA TABLE
-============================================================ */
-
-.reports-table-container {
-
-  width: 100%;
-
-  overflow-x: auto;
-
-  border:
-    1px solid
-    var(--report-line);
-
-  border-radius:
-    13px;
-}
-
-.reports-table {
-
-  width: 100%;
-
-  min-width:
-    700px;
-
-  border-collapse:
-    collapse;
-
-  font-size:
-    13px;
-}
-
-
-/* ============================================================
-   TABLE HEADER
-============================================================ */
-
-.reports-table thead {
-
-  background:
-    #f8fafc;
-}
-
-.reports-table thead th {
-
-  padding:
-    13px 16px;
-
-  text-align:
-    left;
-
-  color:
-    #667085;
-
-  font-size:
-    10.5px;
-
-  font-weight:
-    700;
-
-  text-transform:
-    uppercase;
-
-  letter-spacing:
-    0.6px;
-
-  border-bottom:
-    1px solid
-    var(--report-line);
-
-  white-space:
-    nowrap;
-}
-
-
-/* ============================================================
-   TABLE BODY
-============================================================ */
-
-.reports-table tbody td {
-
-  padding:
-    15px 16px;
-
-  color:
-    var(--report-dark);
-
-  border-bottom:
-    1px solid
-    #f0f2f5;
-
-  white-space:
-    nowrap;
-}
-
-.reports-table tbody tr {
-
-  transition:
-    background 0.15s ease;
-}
-
-.reports-table tbody tr:hover {
-
-  background:
-    #f0fdf9;
-}
-
-.reports-table tbody tr:last-child td {
-
-  border-bottom:
-    none;
-}
-
-
-/* product */
-
-.reports-table tbody td:first-child {
-
-  font-weight:
-    600;
-}
-
-
-/* customer */
-
-.reports-table tbody td:nth-child(2) {
-
-  color:
-    var(--report-muted);
-}
-
-
-/* quantity */
-
-.reports-table tbody td:nth-child(3) {
-
-  font-family:
-    "Space Grotesk",
-    sans-serif;
-
-  font-weight:
-    600;
-}
-
-
-/* revenue */
-
-.reports-table tbody td:nth-child(4) {
-
-  color:
-    var(--report-green-dark);
-
-  font-family:
-    "Space Grotesk",
-    sans-serif;
-
-  font-weight:
-    700;
-}
-
-
-/* date */
-
-.reports-table tbody td:nth-child(5) {
-
-  color:
-    var(--report-light);
-
-  font-size:
-    11.5px;
-}
-
-
-/* ============================================================
-   RESPONSIVE
-============================================================ */
-
-@media (max-width: 1150px) {
-
-  .reports-stats {
-
-    grid-template-columns:
-      repeat(2, 1fr);
-  }
-
-  .reports-grid {
-
-    grid-template-columns:
-      1fr;
-  }
-}
-
-
-@media (max-width: 700px) {
-
-  .dashboard-content {
-
-    padding:
-      18px 14px 40px;
-  }
-
-  .reports-header {
-
-    padding:
-      22px 20px;
-
-    border-radius:
-      18px;
-  }
-
-  .reports-header h1 {
-
-    font-size:
-      25px;
-  }
-
-  .reports-stats {
-
-    grid-template-columns:
-      1fr;
-  }
-
-  .reports-card {
-
-    padding:
-      18px;
-  }
-
-  .inventory-report-list {
-
-    grid-template-columns:
-      1fr;
-  }
-}
-
-
-@media (prefers-reduced-motion: reduce) {
-
-  .report-stat-card,
-  .report-stat-icon,
-  .report-product-item,
-  .inventory-report-item {
-
-    transition:
-      none;
-  }
-}
-/* ============================================================
-   STOCK STATUS CHART
-============================================================ */
+/* STOCK CHART */
 
 .stock-chart-card {
-  margin-bottom: 18px;
+  min-width: 0;
+  margin-bottom: 23px;
+  padding: 24px;
+  background: var(--reports-card);
+  border: 1px solid var(--reports-border);
+  border-radius: var(--reports-radius);
+  box-shadow: var(--reports-shadow);
 }
 
 .stock-chart-wrapper {
   width: 100%;
-  min-height: 300px;
+  min-width: 0;
+  height: 300px;
 }
 
-.stock-chart-wrapper .recharts-legend-item-text {
-  font-family: "DM Sans", sans-serif;
-  font-size: 12px;
-  color: #667085;
-}
-
-.stock-chart-wrapper .recharts-tooltip-wrapper {
-  outline: none;
-}
-
-@media (max-width: 700px) {
-  .stock-chart-wrapper {
-    min-height: 260px;
-  }
-}
-/* ============================================================
-   STOCK STATUS CHART
-============================================================ */
-
-.stock-chart-card {
-  margin-bottom: 18px;
-}
-
-.stock-chart-wrapper {
-  width: 100%;
-  min-height: 300px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.stock-chart-wrapper .recharts-legend-item-text {
-  font-family: "Inter", sans-serif;
-  font-size: 12px;
-  color: var(--ink-soft);
-}
-
-.stock-chart-wrapper .recharts-tooltip-wrapper {
-  outline: none;
-}
-
-@media (max-width: 640px) {
-  .stock-chart-wrapper {
-    min-height: 260px;
-  }
-}
-/* ============================================================
-   SALES / REVENUE CHART
-   ============================================================ */
+/* REVENUE CHART */
 
 .reports-revenue-card {
-  margin-bottom: 16px;
-  overflow: hidden;
-}
-
-.reports-revenue-card .reports-card-header {
-  align-items: center;
+  min-width: 0;
+  margin-bottom: 23px;
+  padding: 25px;
+  background: var(--reports-card);
+  border: 1px solid var(--reports-border);
+  border-radius: var(--reports-radius);
+  box-shadow: var(--reports-shadow);
 }
 
 .chart-total {
-  font-family: "Sora", sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--teal-deep);
-  background: var(--teal-tint);
-  padding: 9px 14px;
-  border-radius: 10px;
-  white-space: nowrap;
+  color: var(--reports-text);
+  font-size: 26px;
+  font-weight: 750;
+  overflow-wrap: anywhere;
 }
 
 .revenue-chart {
   width: 100%;
-  height: 300px;
-  margin-top: 8px;
+  min-width: 0;
+  height: 310px;
+  margin-top: 15px;
 }
 
-.revenue-chart .recharts-tooltip-cursor {
-  stroke: var(--teal);
-  stroke-width: 1;
-  stroke-dasharray: 4 4;
+/* TABLE */
+
+.reports-table-container {
+  width: 100%;
+  overflow-x: auto;
+  background: var(--reports-card);
+  border: 1px solid var(--reports-border);
+  border-radius: var(--reports-radius);
+  box-shadow: var(--reports-shadow);
 }
 
-@media (max-width: 640px) {
-  .reports-revenue-card .reports-card-header {
-    flex-direction: column;
+.reports-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.reports-table thead {
+  background: #f7f8fc;
+}
+
+.reports-table th {
+  padding: 16px 20px;
+  color: #687386;
+  border-bottom: 1px solid var(--reports-border);
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+}
+
+.reports-table td {
+  padding: 16px 20px;
+  color: #424c5d;
+  border-bottom: 1px solid #eff1f5;
+  font-size: 13px;
+}
+
+.reports-table tbody tr {
+  transition: background 0.15s ease;
+}
+
+.reports-table tbody tr:hover {
+  background: #f8f8fd;
+}
+
+.reports-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* EMPTY, LOADING AND ERROR STATES */
+
+.reports-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 140px;
+  padding: 25px;
+  color: var(--reports-muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.reports-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  color: var(--reports-muted);
+  font-size: 14px;
+}
+
+.reports-error {
+  margin-bottom: 22px;
+  padding: 17px 19px;
+  color: #a52834;
+  background: #fff0f1;
+  border: 1px solid #f5cdd1;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* RESPONSIVE — TABLETS */
+
+@media (max-width: 1200px) {
+  .dashboard-content {
+    padding: 24px;
+  }
+
+  .reports-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .reports-grid {
+    gap: 16px;
+  }
+
+  .report-stat-card {
+    padding: 20px;
+  }
+}
+
+/* RESPONSIVE — MOBILE */
+
+@media (max-width: 768px) {
+  .dashboard-content {
+    padding: 18px 14px;
+  }
+
+  .reports-header {
     align-items: flex-start;
+    flex-direction: column;
+    margin-bottom: 22px;
+  }
+
+  .reports-header h1 {
+    font-size: 25px;
+  }
+
+  .reports-header-actions {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .reports-action-btn {
+    min-height: 40px;
+    padding: 0 12px;
+    font-size: 12px;
+  }
+
+  .reports-stats {
     gap: 12px;
   }
 
-  .chart-total {
-    font-size: 15px;
+  .report-stat-card {
+    gap: 10px;
+    padding: 16px 12px;
   }
 
+  .report-stat-icon {
+    width: 39px;
+    height: 39px;
+    border-radius: 10px;
+  }
+
+  .report-stat-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .report-stat-card h3 {
+    font-size: 11px;
+  }
+
+  .report-stat-card h2 {
+    font-size: 21px;
+  }
+
+  .reports-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .reports-card,
+  .stock-chart-card,
+  .reports-revenue-card {
+    padding: 18px 15px;
+    margin-bottom: 16px;
+  }
+
+  .stock-chart-wrapper,
   .revenue-chart {
-    height: 240px;
+    height: 250px;
+  }
+
+  .reports-table th,
+  .reports-table td {
+    padding: 13px 14px;
+  }
+}
+
+/* RESPONSIVE — SMALL PHONES */
+
+@media (max-width: 420px) {
+  .reports-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .report-stat-card {
+    padding: 18px;
+  }
+
+  .reports-header-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .reports-header-actions .reports-action-btn {
+    width: 100%;
+  }
+
+  .reports-card-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .chart-total {
+    font-size: 22px;
+  }
+}
+
+/* REDUCE MOTION ACCESSIBILITY */
+
+@media (prefers-reduced-motion: reduce) {
+  .reports-action-btn,
+  .report-stat-card,
+  .report-product-item,
+  .reports-table tbody tr {
+    transition: none;
+  }
+
+  .reports-action-btn:hover:not(:disabled),
+  .report-stat-card:hover {
+    transform: none;
   }
 }

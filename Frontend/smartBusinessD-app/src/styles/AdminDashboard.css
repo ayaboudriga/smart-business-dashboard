@@ -531,3 +531,40 @@
   }
 
 }
+
+.kpi-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000000;
+}
+
+.kpi-icon svg {
+  display: block;
+  width: 25px;
+  height: 25px;
+  stroke: currentColor;
+  flex-shrink: 0;
+}
+
+.overview-item > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.overview-item > span svg {
+  color: #000000;
+  flex-shrink: 0;
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.empty-state svg {
+  color: #000000;
+  flex-shrink: 0;
+}

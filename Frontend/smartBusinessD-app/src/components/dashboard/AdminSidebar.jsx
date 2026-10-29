@@ -20,12 +20,12 @@ function AdminSidebar() {
   <nav className="admin-nav">
 
     <NavLink to="/admin-dashboard">
-      <span className="admin-nav-icon">🏠</span>
+      <span className="admin-nav-icon"></span>
       Dashboard
     </NavLink>
 
     <NavLink to="/admin-users">
-      <span className="admin-nav-icon">👥</span>
+      <span className="admin-nav-icon"></span>
       Users
     </NavLink>
 
@@ -35,12 +35,12 @@ function AdminSidebar() {
 </NavLink>
 
     <NavLink to="/admin-products">
-      <span className="admin-nav-icon">🛒</span>
+      <span className="admin-nav-icon"></span>
       Sales
     </NavLink>
 
     <NavLink to="/admin-reports">
-      <span className="admin-nav-icon">📊</span>
+      <span className="admin-nav-icon"></span>
       Reports
     </NavLink>
 

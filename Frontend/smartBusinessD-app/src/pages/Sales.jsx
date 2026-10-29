@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -6,7 +7,80 @@ import EmployeeNavbar from "../components/dashboard/EmployeeNavbar";
 import ManagerSidebar from "../components/dashboard/ManagerSidebar";
 import ManagerNavbar from "../components/dashboard/ManagerNavbar";
 import AdminSidebar from "../components/dashboard/AdminSidebar";
+
 import "../styles/Sales.css";
+
+// =========================================
+// SVG ICONS
+// =========================================
+
+function SalesIcon({ type, size = 24 }) {
+  const props = {
+    width: size,
+    height: size,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.8,
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    "aria-hidden": true,
+  };
+
+  const icons = {
+    sales: (
+      <>
+        <rect x="3" y="6" width="18" height="13" rx="2" />
+        <path d="M3 10h18M7 15h3" />
+        <path d="M16 3v4" />
+      </>
+    ),
+
+    revenue: (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M16 8h-5a2 2 0 0 0 0 4h2a2 2 0 0 1 0 4H8" />
+        <path d="M12 6v12" />
+      </>
+    ),
+
+    calendar: (
+      <>
+        <rect x="3" y="5" width="18" height="16" rx="2" />
+        <path d="M16 3v4M8 3v4M3 10h18" />
+        <path d="m9 15 2 2 4-4" />
+      </>
+    ),
+
+    chart: (
+      <>
+        <path d="M3 3v18h18" />
+        <path d="m7 14 4-4 4 3 5-7" />
+        <path d="M16 6h4v4" />
+      </>
+    ),
+
+    close: (
+      <>
+        <path d="m18 6-12 12M6 6l12 12" />
+      </>
+    ),
+
+    empty: (
+      <>
+        <rect x="3" y="5" width="18" height="15" rx="2" />
+        <path d="M3 10h18M8 3v4M16 3v4" />
+        <path d="M9 15h6" />
+      </>
+    ),
+  };
+
+  return <svg {...props}>{icons[type] || icons.sales}</svg>;
+}
+
+// =========================================
+// SALES COMPONENT
+// =========================================
 
 function Sales() {
   const [sales, setSales] = useState([]);
@@ -38,6 +112,7 @@ function Sales() {
   } catch (error) {
     console.error("Error reading user:", error);
   }
+
   const isAdmin = user?.role === "admin";
   const isManager = user?.role === "manager";
 
@@ -125,16 +200,13 @@ function Sales() {
     const customerName =
       sale.customer?.toLowerCase() || "";
 
-    const search =
-      searchTerm.toLowerCase();
+    const search = searchTerm.toLowerCase();
 
     const matchesSearch =
       productName.includes(search) ||
       customerName.includes(search);
 
-    const saleDate = new Date(
-      sale.createdAt
-    );
+    const saleDate = new Date(sale.createdAt);
 
     let matchesDate = true;
 
@@ -148,9 +220,7 @@ function Sales() {
     if (dateFilter === "week") {
       const weekAgo = new Date();
 
-      weekAgo.setDate(
-        today.getDate() - 7
-      );
+      weekAgo.setDate(today.getDate() - 7);
 
       matchesDate = saleDate >= weekAgo;
     }
@@ -198,7 +268,6 @@ function Sales() {
 
       await fetchSales();
       await fetchProducts();
-
     } catch (error) {
       console.error("Error creating sale:", error);
 
@@ -208,9 +277,7 @@ function Sales() {
           "Error creating sale."
         );
       } else {
-        alert(
-          "Unable to connect to the server."
-        );
+        alert("Unable to connect to the server.");
       }
     }
   };
@@ -222,32 +289,31 @@ function Sales() {
   return (
     <div className="dashboard-layout">
 
-      {/* Sidebar */}
+      {/* SIDEBAR */}
+
       {isAdmin ? (
         <AdminSidebar />
-        ) : isManager ? (
+      ) : isManager ? (
         <ManagerSidebar />
-        ) : (
+      ) : (
         <EmployeeSidebar />
-        )}
+      )}
 
       <main className="dashboard-content">
 
-        {/* Navbar */}
+        {/* NAVBAR */}
+
         {isAdmin ? (
-        <ManagerNavbar />
+          <ManagerNavbar />
         ) : isManager ? (
-        <ManagerNavbar />
+          <ManagerNavbar />
         ) : (
-        <EmployeeNavbar />
+          <EmployeeNavbar />
         )}
 
-        {/* =====================================
-            HEADER
-        ===================================== */}
+        {/* HEADER */}
 
         <div className="sales-header">
-
           <div>
             <h1>Sales</h1>
 
@@ -257,98 +323,76 @@ function Sales() {
           </div>
 
           <button
+            type="button"
             className="add-sale-btn"
             onClick={() => setShowForm(true)}
           >
             + New Sale
           </button>
-
         </div>
 
-        {/* =====================================
-            SALES STATISTICS
-        ===================================== */}
+        {/* SALES STATISTICS */}
 
         <div className="sales-stats">
 
           <div className="sales-stat-card">
-
             <div className="sales-stat-icon">
-              💰
+              <SalesIcon type="sales" />
             </div>
 
             <div>
               <p>Total Sales</p>
-
-              <h2>
-                {totalSales}
-              </h2>
+              <h2>{totalSales}</h2>
             </div>
-
           </div>
 
           <div className="sales-stat-card">
-
             <div className="sales-stat-icon">
-              💵
+              <SalesIcon type="revenue" />
             </div>
 
             <div>
               <p>Total Revenue</p>
-
               <h2>
                 {totalRevenue.toLocaleString()} TND
               </h2>
             </div>
-
           </div>
 
           <div className="sales-stat-card">
-
             <div className="sales-stat-icon">
-              📅
+              <SalesIcon type="calendar" />
             </div>
 
             <div>
               <p>Today's Sales</p>
-
-              <h2>
-                {todaySales.length}
-              </h2>
+              <h2>{todaySales.length}</h2>
             </div>
-
           </div>
 
           <div className="sales-stat-card">
-
             <div className="sales-stat-icon">
-              📈
+              <SalesIcon type="chart" />
             </div>
 
             <div>
               <p>Today's Revenue</p>
-
               <h2>
                 {todayRevenue.toLocaleString()} TND
               </h2>
             </div>
-
           </div>
 
         </div>
 
-        {/* =====================================
-            NEW SALE FORM
-        ===================================== */}
+        {/* NEW SALE FORM */}
 
         {showForm && (
           <div className="sale-form-card">
 
             <div className="sale-form-header">
-
               <div>
                 <h2>New Sale</h2>
-
                 <p>
                   Enter the sale information below.
                 </p>
@@ -358,31 +402,30 @@ function Sales() {
                 type="button"
                 className="close-sale-btn"
                 onClick={() => setShowForm(false)}
+                aria-label="Close sale form"
               >
-                ✕
+                <SalesIcon type="close" size={20} />
               </button>
-
             </div>
 
             <form onSubmit={handleCreateSale}>
 
               <div className="sale-form-grid">
 
-                {/* Product */}
+                {/* PRODUCT */}
 
                 <div className="sale-field">
-
-                  <label>
+                  <label htmlFor="sale-product">
                     Product
                   </label>
 
                   <select
+                    id="sale-product"
                     name="product"
                     value={formData.product}
                     onChange={handleChange}
                     required
                   >
-
                     <option value="">
                       Select product
                     </option>
@@ -391,25 +434,24 @@ function Sales() {
                       <option
                         key={product._id}
                         value={product._id}
+                        disabled={Number(product.quantity) <= 0}
                       >
                         {product.name} - Stock:{" "}
                         {product.quantity}
                       </option>
                     ))}
-
                   </select>
-
                 </div>
 
-                {/* Quantity */}
+                {/* QUANTITY */}
 
                 <div className="sale-field">
-
-                  <label>
+                  <label htmlFor="sale-quantity">
                     Quantity
                   </label>
 
                   <input
+                    id="sale-quantity"
                     type="number"
                     name="quantity"
                     min="1"
@@ -417,30 +459,28 @@ function Sales() {
                     onChange={handleChange}
                     required
                   />
-
                 </div>
 
-                {/* Customer */}
+                {/* CUSTOMER */}
 
                 <div className="sale-field">
-
-                  <label>
+                  <label htmlFor="sale-customer">
                     Customer
                   </label>
 
                   <input
+                    id="sale-customer"
                     type="text"
                     name="customer"
                     placeholder="Customer name"
                     value={formData.customer}
                     onChange={handleChange}
                   />
-
                 </div>
 
               </div>
 
-              {/* Buttons */}
+              {/* FORM BUTTONS */}
 
               <div className="sale-form-actions">
 
@@ -462,18 +502,14 @@ function Sales() {
               </div>
 
             </form>
-
           </div>
         )}
 
-        {/* =====================================
-            SALES TABLE
-        ===================================== */}
+        {/* SALES TABLE */}
 
         <div className="sales-card">
 
           <div className="sales-card-header">
-
             <div>
 
               <div className="sales-filters">
@@ -486,6 +522,7 @@ function Sales() {
                     setSearchTerm(e.target.value)
                   }
                   className="sales-search"
+                  aria-label="Search product or customer"
                 />
 
                 <select
@@ -494,8 +531,8 @@ function Sales() {
                     setDateFilter(e.target.value)
                   }
                   className="sales-filter"
+                  aria-label="Filter sales by date"
                 >
-
                   <option value="all">
                     All Sales
                   </option>
@@ -507,24 +544,18 @@ function Sales() {
                   <option value="week">
                     Last 7 Days
                   </option>
-
                 </select>
 
               </div>
 
-              <h2>
-                Recent Sales
-              </h2>
+              <h2>Recent Sales</h2>
 
-              <p>
-                Your latest transactions
-              </p>
+              <p>Your latest transactions</p>
 
             </div>
-
           </div>
 
-          {/* Loading */}
+          {/* LOADING */}
 
           {loading ? (
 
@@ -534,17 +565,15 @@ function Sales() {
 
           ) : sales.length === 0 ? (
 
-            /* No Sales */
+            /* NO SALES */
 
             <div className="sales-empty">
 
               <div className="sales-empty-icon">
-                💰
+                <SalesIcon type="empty" size={34} />
               </div>
 
-              <h3>
-                No sales yet
-              </h3>
+              <h3>No sales yet</h3>
 
               <p>
                 Start by creating your first sale.
@@ -554,14 +583,13 @@ function Sales() {
 
           ) : (
 
-            /* Sales Table */
+            /* SALES TABLE */
 
             <div className="sales-table-container">
 
               <table className="sales-table">
 
                 <thead>
-
                   <tr>
                     <th>Product</th>
                     <th>Customer</th>
@@ -569,7 +597,6 @@ function Sales() {
                     <th>Total</th>
                     <th>Date</th>
                   </tr>
-
                 </thead>
 
                 <tbody>
@@ -577,14 +604,12 @@ function Sales() {
                   {filteredSales.length === 0 ? (
 
                     <tr>
-
                       <td
                         colSpan="5"
                         className="sales-no-results"
                       >
                         No sales found.
                       </td>
-
                     </tr>
 
                   ) : (
@@ -594,27 +619,25 @@ function Sales() {
                       <tr key={sale._id}>
 
                         <td>
-                          {sale.product?.name ||
-                            "Unknown"}
+                          {sale.product?.name || "Unknown"}
                         </td>
 
                         <td>
-                          {sale.customer ||
-                            "Walk-in Customer"}
+                          {sale.customer || "Walk-in Customer"}
                         </td>
 
-                        <td>
-                          {sale.quantity}
-                        </td>
+                        <td>{sale.quantity}</td>
 
                         <td>
                           {sale.totalPrice} TND
                         </td>
 
                         <td>
-                          {new Date(
-                            sale.createdAt
-                          ).toLocaleDateString()}
+                          {sale.createdAt
+                            ? new Date(
+                                sale.createdAt
+                              ).toLocaleDateString()
+                            : "—"}
                         </td>
 
                       </tr>
@@ -634,7 +657,6 @@ function Sales() {
         </div>
 
       </main>
-
     </div>
   );
 }

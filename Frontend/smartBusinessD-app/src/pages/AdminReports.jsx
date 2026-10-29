@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+
+import { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
@@ -25,6 +26,51 @@ import {
 
 import "../styles/AdminReports.css";
 
+// ===============================
+// SVG REPORT ICONS
+// ===============================
+function ReportIcon({ name, size = 20 }) {
+  const common = {
+    width: size,
+    height: size,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.8,
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    "aria-hidden": true,
+  };
+
+  const icons = {
+    excel: (
+      <>
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <path d="M14 2v6h6" />
+        <path d="m8 12 4 6m0-6-4 6" />
+      </>
+    ),
+    pdf: (
+      <>
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <path d="M14 2v6h6" />
+        <path d="M8 18v-5h2a1.5 1.5 0 0 1 0 3H8" />
+        <path d="M14 13v5h1a2.5 2.5 0 0 0 0-5z" />
+      </>
+    ),
+    refresh: (
+      <>
+        <path d="M20 7v5h-5" />
+        <path d="M4 17v-5h5" />
+        <path d="M5.5 9A7 7 0 0 1 18 6l2 6" />
+        <path d="M18.5 15A7 7 0 0 1 6 18l-2-6" />
+      </>
+    ),
+  };
+
+  return <svg {...common}>{icons[name]}</svg>;
+}
+
 function AdminReports() {
   const [products, setProducts] = useState([]);
   const [sales, setSales] = useState([]);
@@ -33,63 +79,72 @@ function AdminReports() {
   const [reportPeriod, setReportPeriod] = useState("all");
 
   // ===============================
-  // FETCH DATA
+  // FETCH PRODUCTS AND SALES
   // ===============================
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        setError("");
+  const fetchData = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError("");
 
-        const [productsResponse, salesResponse] = await Promise.all([
-          axios.get("http://localhost:5000/products"),
-          axios.get("http://localhost:5000/sales"),
-        ]);
+      const [productsResponse, salesResponse] = await Promise.all([
+        axios.get("http://localhost:5000/products"),
+        axios.get("http://localhost:5000/sales"),
+      ]);
 
-        const productsData = Array.isArray(productsResponse.data)
-          ? productsResponse.data
-          : productsResponse.data.products || [];
+      const productsData = Array.isArray(productsResponse.data)
+        ? productsResponse.data
+        : productsResponse.data?.products || [];
 
-        const salesData = Array.isArray(salesResponse.data)
-          ? salesResponse.data
-          : salesResponse.data.sales || [];
+      const salesData = Array.isArray(salesResponse.data)
+        ? salesResponse.data
+        : salesResponse.data?.sales || [];
 
-        setProducts(productsData);
-        setSales(salesData);
-      } catch (err) {
-        console.error("Error fetching reports data:", err);
-        setError("Unable to load reports data.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
+      setProducts(productsData);
+      setSales(salesData);
+    } catch (err) {
+      console.error("Error fetching reports data:", err);
+      setError("Unable to load reports data. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  // ===============================
+  // SALE AMOUNT
+  // ===============================
+  const getSaleAmount = (sale) => {
+    return Number(
+      sale.totalAmount ??
+        sale.totalPrice ??
+        sale.amount ??
+        sale.total ??
+        0
+    ) || 0;
+  };
 
   // ===============================
   // FILTER SALES BY PERIOD
   // ===============================
   const filteredSales = useMemo(() => {
-    if (reportPeriod === "all") {
-      return sales;
-    }
+    if (reportPeriod === "all") return sales;
 
     const now = new Date();
+    const startDate = new Date(now);
     const days = Number(reportPeriod);
 
-    const startDate = new Date();
-    startDate.setDate(now.getDate() - days);
+    startDate.setDate(startDate.getDate() - (days === 1 ? 0 : days - 1));
     startDate.setHours(0, 0, 0, 0);
 
     return sales.filter((sale) => {
       const saleDateValue = sale.createdAt || sale.date;
-
-      if (!saleDateValue) {
-        return false;
-      }
+      if (!saleDateValue) return false;
 
       const saleDate = new Date(saleDateValue);
+      if (Number.isNaN(saleDate.getTime())) return false;
 
       return saleDate >= startDate && saleDate <= now;
     });
@@ -107,64 +162,63 @@ function AdminReports() {
   const totalStockValue = products.reduce((total, product) => {
     return (
       total +
-      Number(product.price || 0) * Number(product.quantity || 0)
+      (Number(product.price) || 0) *
+        (Number(product.quantity) || 0)
     );
   }, 0);
 
-  const getSaleAmount = (sale) => {
-    return Number(
-      sale.totalAmount ??
-        sale.totalPrice ??
-        sale.amount ??
-        sale.total ??
-        0
-    );
-  };
-
   const totalRevenue = useMemo(() => {
-    return filteredSales.reduce((total, sale) => {
-      return total + getSaleAmount(sale);
-    }, 0);
+    return filteredSales.reduce(
+      (total, sale) => total + getSaleAmount(sale),
+      0
+    );
   }, [filteredSales]);
+
+  const formatCurrency = (value) =>
+    `${(Number(value) || 0).toLocaleString("fr-TN", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })} TND`;
 
   // ===============================
   // REVENUE BY DATE
   // ===============================
   const revenueByDate = useMemo(() => {
-    const revenueMap = {};
+    const revenueMap = new Map();
 
     filteredSales.forEach((sale) => {
-      const saleDateValue = sale.createdAt || sale.date;
+      const dateValue = sale.createdAt || sale.date;
+      if (!dateValue) return;
 
-      if (!saleDateValue) return;
+      const date = new Date(dateValue);
+      if (Number.isNaN(date.getTime())) return;
 
-      const date = new Date(saleDateValue).toLocaleDateString("en-GB");
+      const key = [
+        date.getFullYear(),
+        String(date.getMonth() + 1).padStart(2, "0"),
+        String(date.getDate()).padStart(2, "0"),
+      ].join("-");
 
-      if (!revenueMap[date]) {
-        revenueMap[date] = 0;
-      }
-
-      revenueMap[date] += getSaleAmount(sale);
+      revenueMap.set(
+        key,
+        (revenueMap.get(key) || 0) + getSaleAmount(sale)
+      );
     });
 
-    return Object.entries(revenueMap)
-      .map(([date, revenue]) => ({
-        date,
-        revenue: Number(revenue.toFixed(2)),
-      }))
-      .sort((a, b) => {
-        const [dayA, monthA, yearA] = a.date.split("/");
-        const [dayB, monthB, yearB] = b.date.split("/");
+    return Array.from(revenueMap.entries())
+      .sort(([dateA], [dateB]) => dateA.localeCompare(dateB))
+      .map(([date, revenue]) => {
+        const [year, month, day] = date.split("-");
 
-        return (
-          new Date(`${yearA}-${monthA}-${dayA}`) -
-          new Date(`${yearB}-${monthB}-${dayB}`)
-        );
+        return {
+          date: `${day}/${month}/${year}`,
+          revenue: Number(revenue.toFixed(2)),
+        };
       });
   }, [filteredSales]);
 
   // ===============================
-  // TOP PRODUCTS
+  // TOP PRODUCTS BY REVENUE
   // ===============================
   const topProductsData = useMemo(() => {
     const productMap = {};
@@ -176,13 +230,8 @@ function AdminReports() {
         sale.name ||
         "Unknown product";
 
-      const amount = getSaleAmount(sale);
-
-      if (!productMap[productName]) {
-        productMap[productName] = 0;
-      }
-
-      productMap[productName] += amount;
+      productMap[productName] =
+        (productMap[productName] || 0) + getSaleAmount(sale);
     });
 
     return Object.entries(productMap)
@@ -206,11 +255,8 @@ function AdminReports() {
         sale.category ||
         "Other";
 
-      if (!categoryMap[category]) {
-        categoryMap[category] = 0;
-      }
-
-      categoryMap[category] += getSaleAmount(sale);
+      categoryMap[category] =
+        (categoryMap[category] || 0) + getSaleAmount(sale);
     });
 
     return Object.entries(categoryMap).map(([name, value]) => ({
@@ -218,10 +264,6 @@ function AdminReports() {
       value: Number(value.toFixed(2)),
     }));
   }, [filteredSales]);
-
-  const formatCurrency = (value) => {
-    return `${Number(value || 0).toFixed(2)} TND`;
-  };
 
   // ===============================
   // EXPORT EXCEL
@@ -231,8 +273,8 @@ function AdminReports() {
       Product: product.name || "—",
       Category: product.category || "—",
       Brand: product.brand || "—",
-      Price: Number(product.price || 0),
-      Quantity: Number(product.quantity || 0),
+      Price: Number(product.price) || 0,
+      Quantity: Number(product.quantity) || 0,
       Supplier: product.supplier || "—",
       StockStatus:
         Number(product.quantity || 0) <= 5
@@ -247,7 +289,7 @@ function AdminReports() {
         sale.name ||
         "—",
       Customer: sale.customer?.name || sale.customerName || "—",
-      Quantity: Number(sale.quantity || 0),
+      Quantity: Number(sale.quantity) || 0,
       TotalPrice: getSaleAmount(sale),
       Date: sale.createdAt || sale.date || "—",
     }));
@@ -281,15 +323,15 @@ function AdminReports() {
     doc.setFontSize(20);
     doc.text("Admin Business Report", 14, 20);
 
-    doc.setFontSize(11);
-    doc.text(
-      `Report period: ${
-        reportPeriod === "all" ? "All dates" : `Last ${reportPeriod} days`
-      }`,
-      14,
-      30
-    );
+    const periodLabel =
+      reportPeriod === "all"
+        ? "All dates"
+        : reportPeriod === "1"
+          ? "Today"
+          : `Last ${reportPeriod} days`;
 
+    doc.setFontSize(11);
+    doc.text(`Report period: ${periodLabel}`, 14, 30);
     doc.text(`Total products: ${totalProducts}`, 14, 42);
     doc.text(`Low stock products: ${lowStockProducts}`, 14, 50);
     doc.text(
@@ -297,22 +339,14 @@ function AdminReports() {
       14,
       58
     );
-    doc.text(
-      `Total revenue: ${formatCurrency(totalRevenue)}`,
-      14,
-      66
-    );
-    doc.text(
-      `Total transactions: ${filteredSales.length}`,
-      14,
-      74
-    );
+    doc.text(`Total revenue: ${formatCurrency(totalRevenue)}`, 14, 66);
+    doc.text(`Total transactions: ${filteredSales.length}`, 14, 74);
 
     const productsTable = products.map((product) => [
       product.name || "—",
       product.category || "—",
       formatCurrency(product.price),
-      product.quantity || 0,
+      Number(product.quantity) || 0,
       Number(product.quantity || 0) <= 5
         ? "Low stock"
         : "Available",
@@ -320,51 +354,51 @@ function AdminReports() {
 
     autoTable(doc, {
       startY: 84,
-      head: [
-        ["Product", "Category", "Price", "Quantity", "Status"],
-      ],
+      head: [["Product", "Category", "Price", "Quantity", "Status"]],
       body: productsTable,
       theme: "grid",
-      styles: {
-        fontSize: 9,
-      },
+      styles: { fontSize: 9 },
+      headStyles: { fillColor: [81, 69, 165] },
     });
 
     doc.save("Admin_Business_Report.pdf");
   };
 
   // ===============================
-  // LOADING / ERROR
+  // LOADING / ERROR STATES
   // ===============================
-  if (loading) {
+  if (loading && products.length === 0 && sales.length === 0) {
     return (
       <div className="admin-layout">
         <AdminSidebar />
-
         <main className="admin-main">
           <AdminNavbar />
-
           <div className="admin-reports-page">
-            <div className="admin-report-state">
-              Loading reports...
-            </div>
+            <div className="admin-report-state">Loading reports...</div>
           </div>
         </main>
       </div>
     );
   }
 
-  if (error) {
+  if (error && products.length === 0 && sales.length === 0) {
     return (
       <div className="admin-layout">
         <AdminSidebar />
-
         <main className="admin-main">
           <AdminNavbar />
-
           <div className="admin-reports-page">
             <div className="admin-report-error">
-              {error}
+              <p>{error}</p>
+              <button
+                type="button"
+                className="reports-action-btn refresh-btn"
+                onClick={fetchData}
+                disabled={loading}
+              >
+                <ReportIcon name="refresh" />
+                Retry
+              </button>
             </div>
           </div>
         </main>
@@ -372,6 +406,9 @@ function AdminReports() {
     );
   }
 
+  // ===============================
+  // MAIN PAGE
+  // ===============================
   return (
     <div className="admin-layout">
       <AdminSidebar />
@@ -380,32 +417,28 @@ function AdminReports() {
         <AdminNavbar />
 
         <div className="admin-reports-page">
-          {/* ================= HEADER ================= */}
           <div className="admin-reports-header">
             <div>
               <span className="admin-reports-label">
                 BUSINESS INTELLIGENCE
               </span>
-
-              <h1>Reports & Analytics</h1>
-
+              <h1>Reports &amp; Analytics</h1>
               <p>
-                Analyse your business performance and monitor your
-                activity.
+                Analyse your business performance and monitor your activity.
               </p>
+              {error && (
+                <p className="admin-report-error">{error}</p>
+              )}
             </div>
 
             <div className="admin-report-actions">
               <div className="admin-report-filters">
-                <label htmlFor="report-period">
-                  Report period
-                </label>
-
+                <label htmlFor="report-period">Report period</label>
                 <select
                   id="report-period"
                   value={reportPeriod}
-                  onChange={(e) =>
-                    setReportPeriod(e.target.value)
+                  onChange={(event) =>
+                    setReportPeriod(event.target.value)
                   }
                 >
                   <option value="all">All dates</option>
@@ -415,30 +448,41 @@ function AdminReports() {
                 </select>
               </div>
 
-              <button
-                className="admin-report-excel-btn"
-                onClick={exportToExcel}
-              >
-                Export Excel
-              </button>
+              <div className="reports-header-actions">
+                <button
+                  type="button"
+                  className="reports-action-btn excel-btn"
+                  onClick={exportToExcel}
+                  disabled={loading}
+                >
+                  <ReportIcon name="excel" size={20} />
+                  <span>Export Excel</span>
+                </button>
 
-              <button
-                className="admin-report-pdf-btn"
-                onClick={exportToPDF}
-              >
-                Export PDF
-              </button>
+                <button
+                  type="button"
+                  className="reports-action-btn pdf-btn"
+                  onClick={exportToPDF}
+                  disabled={loading}
+                >
+                  <ReportIcon name="pdf" size={20} />
+                  <span>Export PDF</span>
+                </button>
 
-              <button
-                className="admin-report-refresh-btn"
-                onClick={() => window.location.reload()}
-              >
-                Refresh data
-              </button>
+                <button
+                  type="button"
+                  className="reports-action-btn refresh-btn"
+                  onClick={fetchData}
+                  disabled={loading}
+                >
+                  <ReportIcon name="refresh" size={20} />
+                  <span>{loading ? "Refreshing..." : "Refresh data"}</span>
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* ================= KPI CARDS ================= */}
+          {/* KPI CARDS */}
           <div className="admin-report-kpi-grid">
             <div className="admin-report-kpi-card">
               <span className="kpi-title">Total products</span>
@@ -465,7 +509,7 @@ function AdminReports() {
             </div>
           </div>
 
-          {/* ================= CHARTS ================= */}
+          {/* CHARTS */}
           <div className="admin-report-charts-grid">
             <div className="admin-report-chart-card admin-report-large-chart">
               <div className="admin-report-card-header">
@@ -479,20 +523,18 @@ function AdminReports() {
                 <ResponsiveContainer width="100%" height={320}>
                   <AreaChart data={revenueByDate}>
                     <CartesianGrid strokeDasharray="3 3" />
-
                     <XAxis dataKey="date" />
-
                     <YAxis />
-
                     <Tooltip
-                      formatter={(value) =>
-                        `${Number(value).toFixed(2)} TND`
-                      }
+                      formatter={(value) => [
+                        `${Number(value).toFixed(2)} TND`,
+                        "Revenue",
+                      ]}
                     />
-
                     <Area
                       type="monotone"
                       dataKey="revenue"
+                      name="Revenue"
                       stroke="#7161ef"
                       fill="#7161ef"
                       fillOpacity={0.18}
@@ -519,23 +561,21 @@ function AdminReports() {
                 <ResponsiveContainer width="100%" height={320}>
                   <BarChart data={topProductsData} layout="vertical">
                     <CartesianGrid strokeDasharray="3 3" />
-
                     <XAxis type="number" />
-
                     <YAxis
                       type="category"
                       dataKey="name"
                       width={100}
                     />
-
                     <Tooltip
-                      formatter={(value) =>
-                        `${Number(value).toFixed(2)} TND`
-                      }
+                      formatter={(value) => [
+                        `${Number(value).toFixed(2)} TND`,
+                        "Revenue",
+                      ]}
                     />
-
                     <Bar
                       dataKey="revenue"
+                      name="Revenue"
                       fill="#8b5cf6"
                       radius={[0, 8, 8, 0]}
                     />
@@ -570,7 +610,7 @@ function AdminReports() {
                     >
                       {salesByCategory.map((entry, index) => (
                         <Cell
-                          key={`cell-${index}`}
+                          key={`${entry.name}-${index}`}
                           fill={[
                             "#7161ef",
                             "#8b5cf6",
@@ -581,13 +621,12 @@ function AdminReports() {
                         />
                       ))}
                     </Pie>
-
                     <Tooltip
-                      formatter={(value) =>
-                        `${Number(value).toFixed(2)} TND`
-                      }
+                      formatter={(value) => [
+                        `${Number(value).toFixed(2)} TND`,
+                        "Revenue",
+                      ]}
                     />
-
                     <Legend />
                   </PieChart>
                 </ResponsiveContainer>
@@ -599,7 +638,7 @@ function AdminReports() {
             </div>
           </div>
 
-          {/* ================= PRODUCTS TABLE ================= */}
+          {/* INVENTORY TABLE */}
           <div className="admin-report-table-card">
             <div className="admin-report-card-header">
               <div>
@@ -622,12 +661,12 @@ function AdminReports() {
 
                 <tbody>
                   {products.length > 0 ? (
-                    products.map((product) => {
-                      const quantity = Number(product.quantity || 0);
+                    products.map((product, index) => {
+                      const quantity = Number(product.quantity) || 0;
                       const isLowStock = quantity <= 5;
 
                       return (
-                        <tr key={product._id}>
+                        <tr key={product._id || `${product.name}-${index}`}>
                           <td>{product.name || "—"}</td>
                           <td>{product.category || "—"}</td>
                           <td>{formatCurrency(product.price)}</td>
@@ -640,9 +679,7 @@ function AdminReports() {
                                   : "stock-badge available"
                               }
                             >
-                              {isLowStock
-                                ? "Low stock"
-                                : "Available"}
+                              {isLowStock ? "Low stock" : "Available"}
                             </span>
                           </td>
                         </tr>
@@ -650,7 +687,7 @@ function AdminReports() {
                     })
                   ) : (
                     <tr>
-                      <td colSpan="5" className="admin-report-empty">
+                      <td colSpan={5} className="admin-report-empty">
                         No products available.
                       </td>
                     </tr>

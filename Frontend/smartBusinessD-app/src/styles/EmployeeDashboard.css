@@ -1400,3 +1400,91 @@ button:active {
 
   font-size: 13px;
 }
+
+.navbar-search-icon,
+.navbar-icon,
+.profile-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.navbar-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.notification-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.notification-icon svg,
+.notification-status-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.success-icon {
+  color: #16a34a;
+}
+
+.stock-low-icon {
+  color: #d97706;
+  background: #fff7ed;
+  border-radius: 50%;
+}
+
+.stock-out-icon {
+  color: #dc2626;
+  background: #fef2f2;
+  border-radius: 50%;
+}
+
+.navbar-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-icon svg {
+  width: 25px;
+  height: 25px;
+}
+
+.dashboard-empty {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dashboard-empty svg {
+  width: 22px;
+  height: 22px;
+  color: #16a34a;
+  flex-shrink: 0;
+}

@@ -26,9 +26,7 @@ function ManagerSidebar() {
           Products
         </NavLink>
 
-        <NavLink to="/manager-inventory">
-          Inventory
-        </NavLink>
+        
 
         <NavLink to="/manager-sales">
           Sales
