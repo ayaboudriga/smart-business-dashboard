@@ -1,0 +1,106 @@
+/* ================================
+   MANAGER SIDEBAR
+================================ */
+
+.sidebar {
+  width: 240px;
+  height: 100vh;
+  background: #17151f;
+  color: white;
+  position: fixed;
+  left: 0;
+  top: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 28px 18px;
+  box-sizing: border-box;
+}
+
+/* LOGO */
+
+.sidebar-logo {
+  padding: 0 12px 30px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-logo h2 {
+  margin: 0;
+  font-size: 23px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.sidebar-logo span {
+  display: block;
+  margin-top: 5px;
+  font-size: 13px;
+  color: #aaa5b8;
+}
+
+/* MENU */
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  margin-top: 25px;
+}
+
+.sidebar-menu a {
+  display: flex;
+  align-items: center;
+
+  padding: 13px 14px;
+
+  color: #c9c5d2;
+  text-decoration: none;
+
+  border-radius: 10px;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  transition: 0.2s ease;
+}
+
+.sidebar-menu a:hover {
+  background: #272331;
+  color: white;
+}
+
+.sidebar-menu a.active {
+  background: #6d5b8c;
+  color: white;
+}
+
+/* BOTTOM */
+
+.sidebar-bottom {
+  margin-top: auto;
+  padding-top: 20px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-bottom a {
+  display: block;
+
+  padding: 12px 14px;
+
+  color: #d0cbd8;
+  text-decoration: none;
+
+  border-radius: 10px;
+
+  font-size: 14px;
+
+  transition: 0.2s ease;
+}
+
+.sidebar-bottom a:hover {
+  background: #302b38;
+  color: white;
+}

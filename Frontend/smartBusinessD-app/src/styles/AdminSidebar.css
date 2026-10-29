@@ -1,0 +1,322 @@
+/* =========================================
+   ADMIN SIDEBAR
+   ========================================= */
+
+.admin-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 250px;
+  height: 100vh;
+
+  background: #111827;
+  color: #ffffff;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 28px 18px;
+
+  box-sizing: border-box;
+
+  z-index: 1000;
+
+  border-right: 1px solid #1f2937;
+}
+
+/* =========================================
+   LOGO
+   ========================================= */
+
+.admin-logo {
+  padding: 0 12px 28px;
+
+  border-bottom: 1px solid #273244;
+
+  margin-bottom: 24px;
+}
+
+.admin-logo h2 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 25px;
+  font-weight: 800;
+
+  letter-spacing: 1px;
+}
+
+.admin-logo span {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #8d99aa;
+
+  font-size: 11px;
+  font-weight: 500;
+
+  letter-spacing: 0.5px;
+}
+
+/* =========================================
+   NAVIGATION
+   ========================================= */
+
+.admin-nav {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+/* =========================================
+   NAV LINKS
+   ========================================= */
+
+.admin-nav a {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  min-height: 45px;
+
+  padding: 0 13px;
+
+  box-sizing: border-box;
+
+  border-radius: 10px;
+
+  color: #aeb8c8;
+
+  text-decoration: none;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.admin-nav a:hover {
+  background: #1d2738;
+
+  color: #ffffff;
+
+  transform: translateX(2px);
+}
+
+/* =========================================
+   ACTIVE LINK
+   ========================================= */
+
+.admin-nav a.active {
+  background: #ffffff;
+
+  color: #111827;
+
+  font-weight: 750;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.admin-nav a.active::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  top: 10px;
+
+  width: 4px;
+  height: 25px;
+
+  background: #2563eb;
+
+  border-radius: 0 5px 5px 0;
+}
+
+/* =========================================
+   ICON
+   ========================================= */
+
+.admin-nav-icon {
+  width: 25px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 17px;
+}
+
+/* =========================================
+   LOGOUT AREA
+   ========================================= */
+
+.admin-logout-container {
+  margin-top: auto;
+
+  padding-top: 20px;
+
+  border-top: 1px solid #273244;
+}
+
+/* =========================================
+   LOGOUT BUTTON
+   ========================================= */
+
+.admin-logout {
+  width: 100%;
+
+  min-height: 44px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 0 13px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: transparent;
+
+  color: #aeb8c8;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  text-align: left;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.admin-logout:hover {
+  background: #351c25;
+
+  color: #ff8797;
+}
+
+/* =========================================
+   ADMIN BADGE
+   ========================================= */
+
+.admin-role {
+  margin-top: 18px;
+
+  padding: 12px;
+
+  border-radius: 10px;
+
+  background: #1a2434;
+
+  border: 1px solid #263247;
+}
+
+.admin-role small {
+  display: block;
+
+  color: #778397;
+
+  font-size: 9px;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.8px;
+}
+
+.admin-role strong {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #ffffff;
+
+  font-size: 12px;
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 950px) {
+
+  .admin-sidebar {
+    width: 220px;
+  }
+
+}
+
+@media (max-width: 700px) {
+
+  .admin-sidebar {
+    width: 70px;
+
+    padding: 20px 10px;
+  }
+
+  .admin-logo {
+    padding: 0 0 20px;
+
+    text-align: center;
+  }
+
+  .admin-logo h2 {
+    font-size: 16px;
+  }
+
+  .admin-logo span {
+    display: none;
+  }
+
+  .admin-nav a {
+    justify-content: center;
+
+    padding: 0;
+
+    font-size: 0;
+  }
+
+  .admin-nav-icon {
+    font-size: 18px;
+  }
+
+  .admin-nav a.active::before {
+    height: 22px;
+  }
+
+  .admin-logout {
+    justify-content: center;
+
+    padding: 0;
+
+    font-size: 0;
+  }
+
+  .admin-role {
+    display: none;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .admin-sidebar {
+    display: none;
+  }
+
+}

@@ -1,0 +1,533 @@
+/* =========================================
+   ADMIN DASHBOARD
+   BLACK SIDEBAR + LIGHT VIOLET BACKGROUND
+========================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+/* =========================================
+   MAIN LAYOUT
+========================================= */
+
+.admin-layout {
+  min-height: 100vh;
+  background: #ede9fe;
+}
+
+.admin-main {
+  min-height: 100vh;
+  margin-left: 250px;
+
+  background:
+    radial-gradient(
+      circle at 90% 0%,
+      rgba(124, 58, 237, 0.14),
+      transparent 30%
+    ),
+    #ede9fe;
+
+  color: #18111f;
+}
+
+/* =========================================
+   HEADER
+========================================= */
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 32px 40px 24px;
+}
+
+.admin-header h1 {
+  margin: 0;
+
+  color: #17121f;
+
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.7px;
+}
+
+.admin-header p {
+  margin: 7px 0 0;
+
+  color: #6b6178;
+
+  font-size: 14px;
+}
+
+.admin-date {
+  padding: 10px 16px;
+
+  background: #ffffff;
+
+  border: 1px solid #ddd6fe;
+  border-radius: 10px;
+
+  color: #6d28d9;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  box-shadow: 0 4px 15px rgba(76, 29, 149, 0.07);
+}
+
+/* =========================================
+   KPI CARDS
+========================================= */
+
+.admin-kpis {
+  display: grid;
+
+  grid-template-columns: repeat(5, 1fr);
+
+  gap: 18px;
+
+  padding: 0 40px 28px;
+}
+
+.admin-kpi-card {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  min-height: 112px;
+
+  padding: 20px;
+
+  background: #ffffff;
+
+  border: 1px solid #e4defa;
+
+  border-radius: 16px;
+
+  box-shadow:
+    0 6px 20px rgba(76, 29, 149, 0.07);
+
+  overflow: hidden;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.admin-kpi-card::after {
+  content: "";
+
+  position: absolute;
+
+  width: 90px;
+  height: 90px;
+
+  right: -45px;
+  top: -45px;
+
+  border-radius: 50%;
+
+  background: #f3efff;
+}
+
+.admin-kpi-card:hover {
+  transform: translateY(-4px);
+
+  border-color: #c4b5fd;
+
+  box-shadow:
+    0 12px 28px rgba(76, 29, 149, 0.12);
+}
+
+/* =========================================
+   KPI ICON
+========================================= */
+
+.kpi-icon {
+  position: relative;
+  z-index: 2;
+
+  width: 48px;
+  height: 48px;
+
+  min-width: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 13px;
+
+  background: #ede9fe;
+
+  border: 1px solid #ddd6fe;
+
+  font-size: 20px;
+}
+
+/* =========================================
+   KPI TEXT
+========================================= */
+
+.admin-kpi-card span {
+  position: relative;
+  z-index: 2;
+
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #7c7189;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.admin-kpi-card strong {
+  position: relative;
+  z-index: 2;
+
+  display: block;
+
+  color: #241b2d;
+
+  font-size: 22px;
+  font-weight: 800;
+}
+
+/* =========================================
+   WARNING KPI
+========================================= */
+
+.admin-kpi-card.warning {
+  border-color: #f1d8c5;
+}
+
+.admin-kpi-card.warning::after {
+  background: #fff4eb;
+}
+
+.admin-kpi-card.warning .kpi-icon {
+  background: #fff4eb;
+  border-color: #fed7aa;
+}
+
+/* =========================================
+   CONTENT GRID
+========================================= */
+
+.admin-content-grid {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 22px;
+
+  padding: 0 40px 40px;
+}
+
+/* =========================================
+   PANELS
+========================================= */
+
+.admin-panel {
+  min-height: 310px;
+
+  padding: 25px;
+
+  background: #ffffff;
+
+  border: 1px solid #e4defa;
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 7px 25px rgba(76, 29, 149, 0.07);
+
+  transition:
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+.admin-panel:hover {
+  box-shadow:
+    0 12px 30px rgba(76, 29, 149, 0.1);
+}
+
+/* =========================================
+   PANEL HEADER
+========================================= */
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 22px;
+}
+
+.panel-header h2 {
+  margin: 0;
+
+  color: #21172b;
+
+  font-size: 18px;
+  font-weight: 750;
+}
+
+.panel-header p {
+  margin: 6px 0 0;
+
+  color: #8a7f95;
+
+  font-size: 12px;
+}
+
+/* =========================================
+   SYSTEM OVERVIEW
+========================================= */
+
+.overview-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+.overview-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 15px 17px;
+
+  background: #faf9ff;
+
+  border: 1px solid #eeeafd;
+
+  border-radius: 11px;
+
+  transition: all 0.2s ease;
+}
+
+.overview-item:hover {
+  background: #f3efff;
+
+  border-color: #ddd6fe;
+
+  transform: translateX(3px);
+}
+
+.overview-item span {
+  color: #665b70;
+
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.overview-item strong {
+  color: #6d28d9;
+
+  font-size: 17px;
+  font-weight: 800;
+}
+
+/* =========================================
+   LOW STOCK LIST
+========================================= */
+
+.low-stock-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+.stock-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 14px 16px;
+
+  background: #faf9ff;
+
+  border: 1px solid #eeeafd;
+
+  border-radius: 11px;
+
+  transition: all 0.2s ease;
+}
+
+.stock-item:hover {
+  background: #f3efff;
+
+  border-color: #ddd6fe;
+}
+
+.stock-item > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.stock-item strong {
+  color: #2a2032;
+
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.stock-item span {
+  color: #8c8196;
+
+  font-size: 11px;
+}
+
+.stock-item b {
+  padding: 6px 10px;
+
+  background: #fef2f2;
+
+  border: 1px solid #fecaca;
+
+  border-radius: 7px;
+
+  color: #dc2626;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* =========================================
+   EMPTY STATE
+========================================= */
+
+.empty-state {
+  min-height: 210px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #766b80;
+
+  font-size: 13px;
+
+  text-align: center;
+}
+
+/* =========================================
+   LOADING
+========================================= */
+
+.admin-loading {
+  min-height: 100vh;
+
+  margin-left: 250px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #ede9fe;
+
+  color: #6d28d9;
+
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1300px) {
+
+  .admin-kpis {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+}
+
+@media (max-width: 1050px) {
+
+  .admin-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width: 800px) {
+
+  .admin-main {
+    margin-left: 70px;
+  }
+
+  .admin-header {
+    padding: 28px 25px 22px;
+  }
+
+  .admin-kpis {
+    grid-template-columns: repeat(2, 1fr);
+
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+
+  .admin-content-grid {
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+
+}
+
+@media (max-width: 600px) {
+
+  .admin-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 15px;
+  }
+
+  .admin-kpis {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .admin-main {
+    margin-left: 0;
+  }
+
+  .admin-header {
+    padding: 22px 18px;
+  }
+
+  .admin-kpis {
+    padding: 0 18px 22px;
+  }
+
+  .admin-content-grid {
+    padding: 0 18px 25px;
+  }
+
+  .admin-panel {
+    padding: 20px;
+  }
+
+}
